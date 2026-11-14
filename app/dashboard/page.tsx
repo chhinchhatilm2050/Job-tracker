@@ -1,37 +1,106 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 import connectDB from "@/lib/db";
 import { Board } from "@/lib/models";
 import { getSession } from "@/lib/auth/auth";
 import { KanbanBoard } from "@/components/KabanBoard";
+import { Spinner } from "@/components/ui/spinner";
+import BoardHeader from "@/components/boardHeader";
+import EmptyBoardState from "@/components/emptyBoardState";
 
-async function DashboardContent() {
-  const session = await getSession();
-  await connectDB();
-  const board = await Board.findOne({
-    userId: session?.user.id,
-    name: "Job Hunt",
-  }).populate({
-    path: "columns"
-  }).lean();
-  console.log(board);
-
-  return( 
-    <div className="min-h-screen bg-white">
-      <div className="container mx-auto p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-black">Job Hunt</h1>
-          <p className="text-gray-600">Track your job application</p>
-        </div>
-        <KanbanBoard board={JSON.parse(JSON.stringify(board))} userId={session?.user.id}/>
-      </div>
-    </div>
-  )
+interface DashboardPageProps {
+  searchParams?: Promise<{ boardId?: string }>;
 }
 
-export default function Dashboard() {
+async function getUserBoards(userId: string, requestedBoardId?: string) {
+  await connectDB();
+
+  const allBoards = await Board.find({ userId })
+    .select("_id name createdAt")
+    .sort({ createdAt: 1 });
+
+  if (!allBoards || allBoards.length === 0) {
+    return {
+      boards: [],
+      activeBoard: null,
+    };
+  }
+
+  let activeBoardDoc = null;
+  if (requestedBoardId) {
+    activeBoardDoc = await Board.findOne({
+      _id: requestedBoardId,
+      userId,
+    }).populate({
+      path: "columns",
+      populate: {
+        path: "jobApplications",
+      },
+    });
+  }
+
+  if (!activeBoardDoc) {
+    activeBoardDoc = await Board.findOne({
+      _id: allBoards[0]._id,
+      userId,
+    }).populate({
+      path: "columns",
+      populate: {
+        path: "jobApplications",
+      },
+    });
+  }
+
+  return {
+    boards: JSON.parse(JSON.stringify(allBoards)),
+    activeBoard: activeBoardDoc ? JSON.parse(JSON.stringify(activeBoardDoc)) : null,
+  };
+}
+
+async function DashboardContent({ searchParams }: DashboardPageProps) {
+  const params = searchParams ? await searchParams : undefined;
+
+  const session = await getSession();
+
+  if (!session?.user) {
+    redirect("/sign-in");
+  }
+
+  const { boards, activeBoard } = await getUserBoards(
+    session.user.id,
+    params?.boardId
+  );
+
   return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <DashboardContent />
+    <div className="min-h-screen bg-slate-50/50 dark:bg-zinc-950 transition-colors">
+      <div className="mx-auto max-w-7xl px-6 py-6">
+        {activeBoard ? (
+          <>
+            <BoardHeader
+              boards={boards}
+              currentBoardId={activeBoard._id}
+              currentBoardName={activeBoard.name}
+            />
+            <KanbanBoard board={activeBoard} userId={session.user.id} />
+          </>
+        ) : (
+          <EmptyBoardState />
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default async function Dashboard({ searchParams }: DashboardPageProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[60vh] items-center justify-center bg-white dark:bg-zinc-950">
+          <Spinner className="size-8 text-primary" />
+        </div>
+      }
+    >
+      <DashboardContent searchParams={searchParams} />
     </Suspense>
   );
 }

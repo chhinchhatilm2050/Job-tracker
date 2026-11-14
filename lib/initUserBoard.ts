@@ -41,8 +41,7 @@ export async function initializeUserBoard(userId: string) {
         const columns = await Promise.all(DEFAULT_COLUMNS.map((col) => Column.create({
             name: col.name,
             order: col.order,
-            boardId: board._id,
-            jobApplication: []
+            boardId: board._id
         })));
 
         board.columns = columns.map((col) =>col._id);
@@ -50,6 +49,7 @@ export async function initializeUserBoard(userId: string) {
 
         return board;
     } catch (err) {
+        console.error("Error initializing user board:", err);
         throw err;
     }
 }

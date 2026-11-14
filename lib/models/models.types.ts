@@ -16,7 +16,7 @@ export interface JobApplication  {
 export interface Column {
     _id: string,
     name: string,
-    oder: number,
+    order: number,
     jobApplications: JobApplication[],
 };
 

@@ -49,13 +49,13 @@ export default function SignUp() {
     }
   }
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-white p-4">
-      <Card className="w-full max-w-md border-gray-200 shadow-lg">
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-white dark:bg-zinc-950 p-4 transition-colors">
+      <Card className="w-full max-w-md border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-lg">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-black">
+          <CardTitle className="text-2xl font-bold text-black dark:text-white">
             Sign Up
           </CardTitle>
-          <CardDescription className="text-gray-600">
+          <CardDescription className="text-gray-600 dark:text-zinc-400">
             Create an account to start tracking your job application
           </CardDescription>
         </CardHeader>
@@ -67,39 +67,39 @@ export default function SignUp() {
               </div>
             )}
             <div className="space-y-2">
-              <Label className="text-gray-700" htmlFor="name">
+              <Label className="text-gray-700 dark:text-zinc-300" htmlFor="name">
                 Name
               </Label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="border-gray-300 focus:border-primary focus:ring-primary focus:ring-1"
+                className="border-gray-300 dark:border-zinc-700 focus:border-primary focus:ring-primary focus:ring-1"
                 id="name"
                 type="text"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-gray-700" htmlFor="email">
+              <Label className="text-gray-700 dark:text-zinc-300" htmlFor="email">
                 Email
               </Label>
               <Input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="border-gray-300 focus:border-primary focus:ring-primary focus:ring-1"
+                className="border-gray-300 dark:border-zinc-700 focus:border-primary focus:ring-primary focus:ring-1"
                 id="email"
                 type="email"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-gray-700" htmlFor="password">
+              <Label className="text-gray-700 dark:text-zinc-300" htmlFor="password">
                 Password
               </Label>
               <Input
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="border-gray-300 focus:border-primary focus:ring-primary focus:ring-1"
+                className="border-gray-300 dark:border-zinc-700 focus:border-primary focus:ring-primary focus:ring-1"
                 id="password"
                 type="password"
                 placeholder=""
@@ -110,13 +110,13 @@ export default function SignUp() {
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button
-              className="w-full bg-primary hover:bg-primary/90 cursor-pointer"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer"
               type="submit"
               disabled={loading}
             >
               {loading ? "Creating account..." : "Sign Up"}
             </Button>
-            <p className="text-center text-sm text-gray-600">
+            <p className="text-center text-sm text-gray-600 dark:text-zinc-400">
               Already have an account?{" "}
               <Link
                 className="font-medium text-primary hover:underline"

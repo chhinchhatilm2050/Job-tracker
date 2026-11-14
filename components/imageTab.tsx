@@ -6,7 +6,7 @@ import { useState } from "react";
 export default function ImageTab() {
     const [activeTab, setActiveTab] = useState("organize");
     return (
-         <section className="border-t bg-white py-16">
+         <section className="border-t border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 py-16 transition-colors">
           <div className="container mx-auto px-4">
             <div className="mx-auto max-w-6xl">
               <div className="flex gap-2 justify-center mb-8">
@@ -14,7 +14,7 @@ export default function ImageTab() {
                 <Button className={`cursor-pointer ${activeTab === "get-hired" ? "bg-primary text-primary-foreground " : "bg-muted text-muted-foreground hover:text-white"}`} onClick={() => setActiveTab("get-hired")}>Get Hired</Button>
                 <Button className={`cursor-pointer ${activeTab === "manage-boards" ? "bg-primary text-primary-foreground " : "bg-muted text-muted-foreground hover:text-white"}`} onClick={() => setActiveTab("manage-boards")}>Manage Boards</Button>
               </div>
-              <div className="relative animate-in mx-auto max-w-5xl overflow-hidden rounded-xl border border-gray-200 shadow-lg transition-all duration-300">
+              <div className="relative animate-in mx-auto max-w-5xl overflow-hidden rounded-xl border border-gray-200 dark:border-zinc-800 shadow-lg transition-all duration-300">
                 {activeTab === "organize" && (
                   <Image src="/hero-image/hero1.png" alt="Hero Image" width={1200} height={800} />
                 )}

@@ -81,4 +81,4 @@ const JobApplicationSchema = new Schema<IJobApplication>({
     timestamps: true,
 });
 
-export default mongoose.models.Column || mongoose.model<IJobApplication>("JobApplication", JobApplicationSchema);
+export default mongoose.models.JobApplication || mongoose.model<IJobApplication>("JobApplication", JobApplicationSchema);

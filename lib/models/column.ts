@@ -3,7 +3,7 @@ export interface IColumn extends Document {
     name: string;
     boardId: mongoose.Types.ObjectId;
     order: number;
-    jobApplicatons: mongoose.Types.ObjectId[];
+    jobApplications: mongoose.Types.ObjectId[];
     createdAt: Date;
     updatedAt: Date;
 };
@@ -24,14 +24,17 @@ const ColumnSchema = new Schema<IColumn>({
         required: true,
         default: 0
     },
-    jobApplicatons: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "JobApplication"
-        },
-    ],
 }, {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+});
+
+ColumnSchema.virtual("jobApplications", {
+    ref: "JobApplication",
+    localField: "_id",
+    foreignField: "columnId",
+    options: { sort: { order: 1 } },
 });
 
 export default mongoose.models.Column || mongoose.model<IColumn>("Column", ColumnSchema);
