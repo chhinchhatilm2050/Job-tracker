@@ -140,3 +140,72 @@ body {
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
 }
+
+.hero-video-simulation {
+  --hero-glow-primary: rgb(0 0 0 / 0.09);
+  --hero-glow-secondary: rgb(0 0 0 / 0.055);
+  --hero-grid-line: rgb(0 0 0 / 0.045);
+}
+
+.dark .hero-video-simulation {
+  --hero-glow-primary: rgb(255 255 255 / 0.2);
+  --hero-glow-secondary: rgb(255 255 255 / 0.12);
+  --hero-grid-line: rgb(255 255 255 / 0.07);
+}
+
+.hero-video-simulation::before,
+.hero-video-simulation::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+}
+
+.hero-video-simulation::before {
+  inset: -35%;
+  background:
+    radial-gradient(ellipse at 30% 42%, var(--hero-glow-primary), transparent 38%),
+    radial-gradient(ellipse at 72% 54%, var(--hero-glow-secondary), transparent 34%);
+  filter: blur(36px);
+  animation: hero-video-drift 16s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.hero-video-simulation::after {
+  background-image:
+    linear-gradient(to right, var(--hero-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hero-grid-line) 1px, transparent 1px),
+    radial-gradient(ellipse at center, transparent 25%, var(--background) 100%);
+  background-size: 64px 64px, 64px 64px, auto;
+  mask-image: radial-gradient(ellipse at center, black 8%, transparent 78%);
+  animation: hero-grid-drift 48s linear infinite;
+}
+
+@keyframes hero-video-drift {
+  0% {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, 2%, 0) scale(1.12);
+  }
+  100% {
+    transform: translate3d(-2%, 3%, 0) scale(1.04);
+  }
+}
+
+@keyframes hero-grid-drift {
+  to {
+    background-position: 64px 64px, 64px 64px, 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-video-simulation::before,
+  .hero-video-simulation::after {
+    animation: none;
+  }
+
+  .hero-video-simulation::before {
+    will-change: auto;
+  }
+}

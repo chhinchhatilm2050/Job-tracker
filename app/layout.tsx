@@ -31,17 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                const t = localStorage.getItem('theme');
-                const s = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (t === 'dark' || (!t && s) || (t === 'system' && s)) {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-              } catch (_) {}
-            `,
+            __html: "document.documentElement.classList.add('dark');",
           }}
         />
       </head>

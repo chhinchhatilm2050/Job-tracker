@@ -41,6 +41,14 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import CreateJobApplicationDialog from "./createJobDialog";
 import JobApplicationCard from "./jobApplicationCard";
 import {
@@ -86,12 +94,13 @@ function DraggableJobCard({
   job: JobApplication & { columnId: string };
   columns: Column[];
   onMove: (jobId: string, targetColumnId: string) => void;
-  onDelete: (jobId: string) => void;
+  onDelete: (jobId: string) => void | Promise<void>;
 }) {
   const {
     attributes,
     listeners,
     setNodeRef,
+    setActivatorNodeRef,
     transform,
     transition,
     isDragging,
@@ -109,9 +118,17 @@ function DraggableJobCard({
     opacity: isDragging ? 0.25 : 1,
   };
 
+  const setDraggableNodeRef = useCallback(
+    (node: HTMLElement | null) => {
+      setNodeRef(node);
+      setActivatorNodeRef(node);
+    },
+    [setNodeRef, setActivatorNodeRef],
+  );
+
   return (
     <div
-      ref={setNodeRef}
+      ref={setDraggableNodeRef}
       style={style}
       {...attributes}
       {...listeners}
@@ -124,7 +141,6 @@ function DraggableJobCard({
         columns={columns}
         onMove={onMove}
         onDelete={onDelete}
-        dragHandleProps={{ ...attributes, ...listeners }}
       />
     </div>
   );
@@ -148,9 +164,11 @@ function DroppableColumn({
   sortedColumns: Column[];
   isOver: boolean;
   onMoveJob: (jobId: string, targetColumnId: string) => void;
-  onDeleteJob: (jobId: string) => void;
+  onDeleteJob: (jobId: string) => void | Promise<void>;
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Register the entire column as a drop target using a native div ref
   const { setNodeRef } = useDroppable({
@@ -165,24 +183,31 @@ function DroppableColumn({
 
   async function handleDeleteColumn() {
     if (isDeleting) return;
-    const confirmed = window.confirm(
-      `Are you sure you want to delete column "${column.name}" and all its job applications?`,
-    );
-    if (!confirmed) return;
+
     setIsDeleting(true);
+    setDeleteError(null);
     try {
-      await deleteColumn(column._id, boardId);
+      const result = await deleteColumn(column._id, boardId);
+      if (result.error) {
+        setDeleteError(result.error);
+        return;
+      }
+
+      setDeleteDialogOpen(false);
     } catch (err) {
       console.error("Failed to delete column:", err);
+      setDeleteError(
+        err instanceof Error ? err.message : "Failed to delete column",
+      );
     } finally {
       setIsDeleting(false);
     }
   }
 
   return (
-    <div ref={setNodeRef} className="shrink-0 h-[100vh]">
+    <div ref={setNodeRef} className="shrink-0 h-[80vh]">
       <Card
-        className={`w-80 h-full p-0 flex flex-col rounded-xl overflow-hidden shadow-sm border transition-all duration-150 ${
+        className={`w-80 h-full p-0 flex flex-col rounded-xl overflow-hidden shadow-lg border border-black/10 transition-all duration-150 ${
           isDeleting ? "opacity-50 pointer-events-none" : ""
         } ${
           isOver
@@ -219,7 +244,10 @@ function DroppableColumn({
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   className="text-destructive cursor-pointer"
-                  onClick={handleDeleteColumn}
+                  onClick={() => {
+                    setDeleteError(null);
+                    setDeleteDialogOpen(true);
+                  }}
                 >
                   <Trash2 className="mr-2 h-4 w-4" /> Delete Column
                 </DropdownMenuItem>
@@ -268,6 +296,52 @@ function DroppableColumn({
           </SortableContext>
         </CardContent>
       </Card>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onOpenChange={(open) => {
+          if (!isDeleting) setDeleteDialogOpen(open);
+        }}
+      >
+        <DialogContent className="sm:max-w-[440px]">
+          <DialogHeader>
+            <DialogTitle>Delete Column</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to permanently delete &quot;
+              <span className="font-semibold text-black dark:text-white">
+                {column.name}
+              </span>
+              &quot; and all job applications in it? This action cannot be
+              undone.
+            </DialogDescription>
+          </DialogHeader>
+
+          {deleteError && (
+            <div className="rounded-md bg-destructive/15 p-3 text-xs text-destructive">
+              {deleteError}
+            </div>
+          )}
+
+          <DialogFooter className="gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleDeleteColumn}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete Column"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -373,19 +447,19 @@ export function KanbanBoard({ board, userId }: KanbanBoardProps) {
 
   // Optimistic Delete Handler
   const handleDeleteJob = useCallback(async (jobId: string) => {
+    const result = await deleteJobApplication(jobId);
+    if (result.error) {
+      throw new Error(result.error);
+    }
+
     setColumns((prev) =>
       prev.map((col) => ({
         ...col,
         jobApplications: col.jobApplications.filter(
-          (j) => String(j._id) !== String(jobId),
+          (job) => String(job._id) !== String(jobId),
         ),
       })),
     );
-    try {
-      await deleteJobApplication(jobId);
-    } catch (err) {
-      console.error("Failed to delete job application:", err);
-    }
   }, []);
 
   function handleDragStart(event: DragStartEvent) {
@@ -556,6 +630,7 @@ export function KanbanBoard({ board, userId }: KanbanBoardProps) {
 
   return (
     <DndContext
+      id={`job-board-${board._id}`}
       sensors={sensors}
       collisionDetection={customCollisionDetection}
       onDragStart={handleDragStart}

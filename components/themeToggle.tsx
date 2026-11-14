@@ -1,32 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "./themeProvider";
 import { Button } from "./ui/button";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-9 w-9 rounded-md text-gray-500 opacity-50"
-        aria-label="Toggle theme"
-        disabled
-      >
-        <Sun className="size-4" />
-      </Button>
-    );
-  }
-
   const isDark = resolvedTheme === "dark";
 
   return (

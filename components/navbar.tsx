@@ -176,9 +176,9 @@ export default function Navbar() {
                 className="flex items-center gap-2.5 font-bold text-gray-900 dark:text-zinc-100"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <Briefcase className="size-4" />
+                  <Layers className="size-4" />
                 </div>
-                <span>Job Tracker</span>
+                <span>J◎B Tracker</span>
               </Link>
               <Button
                 variant="ghost"

@@ -13,6 +13,14 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import EditJobApplicationDialog from "./editJobDialog";
 import {
   deleteJobApplication,
@@ -23,8 +31,7 @@ interface JobApplicationCardProps {
   job: JobApplication & { columnId?: string };
   columns: Column[];
   onMove?: (jobId: string, targetColumnId: string) => void;
-  onDelete?: (jobId: string) => void;
-  dragHandleProps?: React.HTMLAttributes<HTMLElement>;
+  onDelete?: (jobId: string) => void | Promise<void>;
 }
 
 export default function JobApplicationCard({
@@ -32,11 +39,12 @@ export default function JobApplicationCard({
   columns,
   onMove,
   onDelete,
-  dragHandleProps,
 }: JobApplicationCardProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   async function handleMove(targetColumnId: string) {
     if (isMoving) return;
@@ -56,20 +64,26 @@ export default function JobApplicationCard({
 
   async function handleDelete() {
     if (isDeleting) return;
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${job.position}" at ${job.company}?`
-    );
-    if (!confirmed) return;
 
     setIsDeleting(true);
+    setDeleteError(null);
     try {
       if (onDelete) {
-        onDelete(job._id);
+        await onDelete(job._id);
       } else {
-        await deleteJobApplication(job._id);
+        const result = await deleteJobApplication(job._id);
+        if (result.error) {
+          setDeleteError(result.error);
+          return;
+        }
       }
+
+      setIsDeleteDialogOpen(false);
     } catch (err) {
       console.error("Failed to delete job application:", err);
+      setDeleteError(
+        err instanceof Error ? err.message : "Failed to delete job application",
+      );
     } finally {
       setIsDeleting(false);
     }
@@ -89,7 +103,7 @@ export default function JobApplicationCard({
             <div className="space-y-1">
               <div className="flex items-start gap-1.5">
                 <div
-                  {...dragHandleProps}
+                  aria-hidden="true"
                   className="mt-0.5 text-gray-400 dark:text-zinc-500 hover:text-gray-700 dark:hover:text-zinc-200 cursor-grab active:cursor-grabbing p-0.5 -ml-1 rounded transition-colors"
                   title="Drag to move"
                 >
@@ -192,7 +206,10 @@ export default function JobApplicationCard({
                   <DropdownMenuItem
                     variant="destructive"
                     className="cursor-pointer"
-                    onClick={handleDelete}
+                    onClick={() => {
+                      setDeleteError(null);
+                      setIsDeleteDialogOpen(true);
+                    }}
                   >
                     <Trash2 className="size-4 mr-2" />
                     Delete Job
@@ -209,6 +226,48 @@ export default function JobApplicationCard({
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
       />
+
+      <Dialog
+        open={isDeleteDialogOpen}
+        onOpenChange={(open) => {
+          if (!isDeleting) setIsDeleteDialogOpen(open);
+        }}
+      >
+        <DialogContent className="sm:max-w-[440px]">
+          <DialogHeader>
+            <DialogTitle>Delete Job Application</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to permanently delete &quot;{job.position}
+              &quot; at {job.company}? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+
+          {deleteError && (
+            <div className="rounded-md bg-destructive/15 p-3 text-xs text-destructive">
+              {deleteError}
+            </div>
+          )}
+
+          <DialogFooter className="gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete Job"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  AlertTriangle,
+
   ChevronDown,
   Kanban,
   Plus,
   Trash2,
   Check,
+  Package,
+  Trash,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -57,22 +59,23 @@ export default function BoardHeader({
       const res = await deleteBoard(currentBoardId);
       if (res?.error) {
         setDeleteError(res.error);
-        setIsDeleting(false);
+        return;
+      }
+
+      setDeleteDialogOpen(false);
+      // Find another board to navigate to, or redirect to /dashboard
+      const remaining = boards.filter((b) => b._id !== currentBoardId);
+      if (remaining.length > 0) {
+        router.push(`/dashboard?boardId=${remaining[0]._id}`);
       } else {
-        setDeleteDialogOpen(false);
-        // Find another board to navigate to, or redirect to /dashboard
-        const remaining = boards.filter((b) => b._id !== currentBoardId);
-        if (remaining.length > 0) {
-          router.push(`/dashboard?boardId=${remaining[0]._id}`);
-        } else {
-          router.push("/dashboard");
-        }
+        router.push("/dashboard");
       }
     } catch (err: unknown) {
       console.error("Failed to delete board:", err);
       const message =
         err instanceof Error ? err.message : "Failed to delete board";
       setDeleteError(message);
+    } finally {
       setIsDeleting(false);
     }
   }
@@ -93,7 +96,7 @@ export default function BoardHeader({
                   }
                 >
                   <span className="flex items-center gap-2">
-                    <Kanban className="size-6 text-primary shrink-0" />
+                    <Package className="size-6 text-primary shrink-0" />
                     <span>{currentBoardName}</span>
                     <ChevronDown className="size-5 text-muted-foreground" />
                   </span>
@@ -171,7 +174,7 @@ export default function BoardHeader({
               setDeleteError(null);
               setDeleteDialogOpen(true);
             }}
-            className="text-destructive px-3 py-4 hover:bg-destructive/10 hover:text-destructive border-red-200 dark:border-red-900/40 cursor-pointer gap-1.5"
+            className="text-destructive px-3 py-4 hover:bg-destructive/10 hover:text-destructive border-black/50 dark:border-red-900/40 cursor-pointer gap-1.5"
             title="Delete this board permanently from database"
           >
             <Trash2 className="size-4" />
@@ -185,7 +188,7 @@ export default function BoardHeader({
         <DialogContent className="sm:max-w-[440px]">
           <DialogHeader className="gap-2.5">
             <div className="size-11 rounded-full bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center">
-              <AlertTriangle className="size-5" />
+              <Trash className="size-5" />
             </div>
             <div>
               <DialogTitle className="text-lg font-semibold text-gray-900 dark:text-zinc-100">
@@ -212,7 +215,7 @@ export default function BoardHeader({
             </div>
           )}
 
-          <DialogFooter className="mt-4 gap-2 sm:gap-0">
+          <DialogFooter className="mt-4 gap-2">
             <Button
               type="button"
               variant="outline"

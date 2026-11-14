@@ -6,84 +6,108 @@ export default async function Footer() {
 
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-auto border-t border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors">
-      {/* 3 Main Feature Highlights */}
-      <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid gap-12 md:grid-cols-3">
-          <div className="flex flex-col">
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
-              <Briefcase className="h-6 w-6" />
-            </div>
-            <h2 className="mb-3 text-2xl font-bold text-gray-900 dark:text-zinc-100">
-              Organize Applications
-            </h2>
-            <p className="text-muted-foreground dark:text-zinc-400 leading-relaxed text-sm">
-              Create custom boards and columns to organize your job applications
-              and track your job applications at every stage of the process.
+    <footer className="mt-auto border-t border-border/70 bg-slate-50/70 transition-colors dark:bg-zinc-950">
+      <div className="mx-auto max-w-7xl px-6 py-12 sm:py-16">
+        <section aria-labelledby="footer-features-title">
+          <div className="mb-8 max-w-2xl">
+            <p className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              <span className="h-px w-6 bg-primary" />
+              Made for your next move
             </p>
-          </div>
-
-          <div className="flex flex-col">
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
-              <TrendingUp className="h-6 w-6" />
-            </div>
-            <h2 className="mb-3 text-2xl font-bold text-gray-900 dark:text-zinc-100">
-              Track Progress
+            <h2
+              id="footer-features-title"
+              className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+            >
+              Your job search, all in one place.
             </h2>
-            <p className="text-muted-foreground dark:text-zinc-400 leading-relaxed text-sm">
-              Monitor your job search progress and stay organized throughout the
-              application process.
-            </p>
           </div>
 
-          <div className="flex flex-col">
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
-              <CheckCircle2 className="h-6 w-6" />
-            </div>
-            <h2 className="mb-3 text-2xl font-bold text-gray-900 dark:text-zinc-100">
-              Stay Organized
-            </h2>
-            <p className="text-muted-foreground dark:text-zinc-400 leading-relaxed text-sm">
-              Never miss a deadline or forget an important detail with Chhat
-              intuitive interface and helpful reminders.
-            </p>
-          </div>
-        </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            <article className="group flex flex-col justify-center items-center relative h-full overflow-hidden rounded-2xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-md dark:bg-zinc-900 dark:hover:border-zinc-600 sm:p-7">
+              <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100">
+                <Briefcase className="size-5" aria-hidden="true" />
+              </div>
+              <h3 className="mb-2 text-lg font-semibold tracking-tight text-foreground">
+                Organize applications
+              </h3>
+              <p className="text-sm text-center leading-6 text-muted-foreground">
+                Create boards and stages that fit your search, then keep every
+                application in one place.
+              </p>
+              <div className="absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-500/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100 dark:via-zinc-400/40" />
+            </article>
 
-        {/* Bottom Bar */}
-        <div className="mt-16 pt-8 border-t border-gray-100 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground dark:text-zinc-400">
-          <div className="flex items-center gap-2 font-medium text-gray-800 dark:text-zinc-200">
-            <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-primary-foreground">
-              <Layers className="size-3.5" />
-            </div>
-            <span>J◎B Tracker</span>
-          </div>
+            <article className="group flex flex-col justify-center items-center relative h-full overflow-hidden rounded-2xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-md dark:bg-zinc-900 dark:hover:border-zinc-600 sm:p-7">
+              <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100">
+                <TrendingUp className="size-5" aria-hidden="true" />
+              </div>
+              <h3 className="mb-2 text-lg font-semibold tracking-tight text-foreground">
+                Track your progress
+              </h3>
+              <p className="text-sm text-center leading-6 text-muted-foreground">
+                See every application at a glance and know what needs your
+                attention next.
+              </p>
+              <div className="absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-500/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100 dark:via-zinc-400/40" />
+            </article>
 
-          <div className="flex items-center gap-6">
-            <Link href="/" className="hover:text-gray-900 dark:hover:text-white transition-colors">
+            <article className="group flex flex-col justify-center items-center relative h-full overflow-hidden rounded-2xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-md dark:bg-zinc-900 dark:hover:border-zinc-600 sm:p-7">
+              <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100">
+                <CheckCircle2 className="size-5" aria-hidden="true" />
+              </div>
+              <h3 className="mb-2 text-lg font-semibold tracking-tight text-foreground">
+                Stay on top of details
+              </h3>
+              <p className="text-sm text-center leading-6 text-muted-foreground">
+                Keep notes, deadlines, and follow-ups together so nothing
+                important slips through.
+              </p>
+              <div className="absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-500/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100 dark:via-zinc-400/40" />
+            </article>
+          </div>
+        </section>
+
+        <div className="mt-10 flex flex-col items-center justify-between gap-6 border-t border-border/70 pt-7 text-sm sm:flex-row">
+          <Link
+            href="/"
+            className="flex items-center gap-3 rounded-lg text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+              <Layers className="size-4" aria-hidden="true" />
+            </span>
+            <span className="font-semibold tracking-tight">J◎B Tracker</span>
+          </Link>
+
+          <nav
+            aria-label="Footer navigation"
+            className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-muted-foreground"
+          >
+            <Link href="/" className="transition-colors hover:text-foreground">
               Home
             </Link>
             <Link
               href="/dashboard"
-              className="hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="transition-colors hover:text-foreground"
             >
               Dashboard
             </Link>
             <Link
               href="/about"
-              className="hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="transition-colors hover:text-foreground"
             >
               About
             </Link>
             <Link
               href="/sign-in"
-              className="hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="transition-colors hover:text-foreground"
             >
               Sign In
             </Link>
-          </div>
+          </nav>
 
-          <p>© {year} Job Tracker. All rights reserved.</p>
+          <p className="text-center text-xs text-muted-foreground">
+            © {year} Job Tracker. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
