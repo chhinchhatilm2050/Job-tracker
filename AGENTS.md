@@ -63,3 +63,52 @@ Once your core features work smoothly, add small daily automations to keep users
 Recurring Daily Tasks: Add a repeatDaily boolean to cards. When checked off, automatically reset it to incomplete at midnight and increment a streak counter.
 
 Morning Carry-Over Prompt: When a user opens My Day on a new date, show unfinished tasks from yesterday with two quick buttons: "Keep for Today" or "Remove from Today".
+
+<!-- you need to update -->
+
+The previous plan felt too manual—it still forces users to manage checkboxes, due dates, and boards themselves. To make your project much smarter, more unique, and truly modern (like Motion, Sunsama, or Notion AI), replace manual task lists with an Automated Daily Command Center that actively thinks and plans for the user.
+
+1. Auto-Scheduled Daily Timeline (Time-Blocking Engine)
+Instead of giving users a static list of tasks that piles up, build a Smart Time-Blocker that automatically places their daily tasks into an hourly schedule. Let users choose their start time and available working hours (defaulting to a 9:00 AM start):
+
+How it works: Users set when their workday starts, their available working hours (e.g., 4 hours/day), and each task's estimated duration (15m, 30m, 1h, 2h). Keep the planned window within the same day.
+
+Smart Auto-Fill: With one click ("Auto-Plan My Day"), your app automatically fills open time slots on their daily timeline—putting high-priority tasks and job interviews first, and slotting quick tasks into leftover 15-minute gaps.
+
+Overload Warning: If a user tries to add 9 hours of tasks into a 6-hour day, show a live warning ("You're overbooked by 3 hours—move 2 tasks to tomorrow?").
+
+2. Focus Mode + Built-In Pomodoro & Ambient Timer
+Users don't just need to track tasks; they need help actually finishing them without getting distracted.
+
+Single-Task Focus View: Clicking "Start Focus" hides the entire Kanban board and shows only one active task on a clean dark screen with a countdown timer (25:00 work / 5:00 break).
+
+Automatic Time Tracking: When the timer finishes, automatically log the real time spent on that card (e.g., Estimated: 1h | Actual: 1h 15m) so users learn how long tasks actually take them.
+
+3. Smart "Brain Dump" Inbox (Zero-Friction Capture)
+Most people abandon task trackers because filling out forms (title, board, column, priority, due date) takes too long.
+
+One-Line Natural Language Input: Let users type a messy thought into a global quick-bar (Cmd + K or Ctrl + K), like:
+
+"Apply to Google frontend role tomorrow high priority 1h"
+
+"Buy groceries and pay internet bill today 30m"
+
+Auto-Parsing: Your code automatically extracts the date (tomorrow), priority (high), duration (1h), and routes it to the right board without the user touching a single dropdown.
+
+4. Daily Energy & Mood Check-In (Adaptive Recommendations)
+Standard trackers treat every day the same, even when the user is exhausted.
+
+Morning Energy Picker: When opening the app each morning, ask one quick question: "How is your energy today?" (⚡ High, 🔋 Normal, 🪫 Low).
+
+Dynamic Task Filtering:
+
+On High Energy days, push deep work (coding projects, interview prep, cover letters) to the top.
+
+On Low Energy days, hide heavy tasks and recommend easy "quick wins" (organizing files, browsing job boards, short errands) so the user still makes progress without burning out.
+
+5. End-of-Day "Daily Wrap-Up" Ritual
+Give users a 60-second evening review screen at 6:00 PM (or whenever they finish work):
+
+Shows a visual summary of what they accomplished today (tasks completed, hours focused, job applications sent).
+
+Automatically reschedules unfinished tasks into tomorrow's timeline with one click so they close their laptop with zero stress.

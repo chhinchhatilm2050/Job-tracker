@@ -1,18 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Briefcase,
   Home,
   LayoutDashboard,
   Info,
+  Sun,
   Menu,
   X,
   LogOut,
-  BriefcaseBusiness,
   Layers,
+  Link2,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -21,16 +21,79 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
   DropdownMenuGroup,
+  DropdownMenuItem,
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { SignOutButton } from "./signoutBtn";
-import { useSession, signOut } from "@/lib/auth/auth.client";
+import {
+  useSession,
+  signOut,
+  linkSocial,
+  listAccounts,
+} from "@/lib/auth/auth.client";
 import { ThemeToggle } from "./themeToggle";
+import BrainDumpDialog from "./brainDumpDialog";
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const sessionUserId = session?.user?.id;
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hasGoogleAccount, setHasGoogleAccount] = useState<boolean | null>(null);
+  const [isLinkingGoogle, setIsLinkingGoogle] = useState(false);
+  const [linkGoogleError, setLinkGoogleError] = useState("");
+
+  useEffect(() => {
+    if (!sessionUserId) return;
+
+    let active = true;
+
+    listAccounts()
+      .then(({ data, error }) => {
+        if (!active) return;
+
+        if (error) {
+          setHasGoogleAccount(false);
+          setLinkGoogleError(error.message ?? "Could not check linked accounts.");
+          return;
+        }
+
+        setHasGoogleAccount(data.some((account) => account.providerId === "google"));
+      })
+      .catch(() => {
+        if (!active) return;
+        setHasGoogleAccount(false);
+        setLinkGoogleError("Could not check linked accounts.");
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [sessionUserId]);
+
+  async function handleLinkGoogle() {
+    setLinkGoogleError("");
+    setIsLinkingGoogle(true);
+
+    try {
+      const result = await linkSocial({
+        provider: "google",
+        callbackURL: "/dashboard?googleLinked=1",
+        errorCallbackURL: "/dashboard",
+      });
+
+      if (result.error) {
+        setLinkGoogleError(result.error.message ?? "Could not start Google linking.");
+        setIsLinkingGoogle(false);
+      } else if (!result.data?.redirect) {
+        setLinkGoogleError("Google account linking did not start. Please try again.");
+        setIsLinkingGoogle(false);
+      }
+    } catch {
+      setLinkGoogleError("Could not start Google linking. Please try again.");
+      setIsLinkingGoogle(false);
+    }
+  }
 
   const navLinks = [
     {
@@ -39,7 +102,12 @@ export default function Navbar() {
       icon: Home,
     },
     {
-      name: "Dashboard",
+      name: "My Day",
+      href: "/my-day",
+      icon: Sun,
+    },
+    {
+      name: "Boards",
       href: "/dashboard",
       icon: LayoutDashboard,
     },
@@ -75,7 +143,7 @@ export default function Navbar() {
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
                 <Layers className="size-5" />
               </div>
-              <span className="whitespace-nowrap">J◎B Tracker</span>
+              <span className="whitespace-nowrap">Task Flow</span>
             </Link>
           </div>
            {/* Desktop Nav Links (Hidden on phone screen) */}
@@ -105,6 +173,8 @@ export default function Navbar() {
             <ThemeToggle />
 
             {session?.user ? (
+              <>
+              <BrainDumpDialog />
               <DropdownMenu>
                 <DropdownMenuTrigger
                   render={
@@ -132,10 +202,26 @@ export default function Navbar() {
                         </p>
                       </div>
                     </DropdownMenuLabel>
+                    {hasGoogleAccount === false && (
+                      <DropdownMenuItem
+                        disabled={isLinkingGoogle}
+                        onClick={handleLinkGoogle}
+                        className="cursor-pointer"
+                      >
+                        <Link2 className="size-4" />
+                        {isLinkingGoogle ? "Connecting Google..." : "Link Google account"}
+                      </DropdownMenuItem>
+                    )}
+                    {linkGoogleError && (
+                      <p role="alert" className="px-2 py-1 text-xs text-destructive">
+                        {linkGoogleError}
+                      </p>
+                    )}
                     <SignOutButton />
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
+              </>
             ) : (
               <div className="flex items-center gap-2">
                 <Link href="/sign-in">
@@ -178,7 +264,7 @@ export default function Navbar() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <Layers className="size-4" />
                 </div>
-                <span>J◎B Tracker</span>
+                <span>Task Flow</span>
               </Link>
               <Button
                 variant="ghost"
@@ -236,6 +322,22 @@ export default function Navbar() {
                     </div>
                   </div>
 
+                  {hasGoogleAccount === false && (
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start cursor-pointer"
+                      disabled={isLinkingGoogle}
+                      onClick={handleLinkGoogle}
+                    >
+                      <Link2 className="size-4 mr-2" />
+                      {isLinkingGoogle ? "Connecting Google..." : "Link Google account"}
+                    </Button>
+                  )}
+                  {linkGoogleError && (
+                    <p role="alert" className="px-2 text-xs text-destructive">
+                      {linkGoogleError}
+                    </p>
+                  )}
                   <Button
                     variant="outline"
                     className="w-full justify-start text-destructive hover:bg-destructive/10 cursor-pointer"

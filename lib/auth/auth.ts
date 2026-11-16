@@ -5,6 +5,9 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { initializeUserBoard } from "../initUserBoard";
 
+const googleClientId = process.env.GOOGLE_CLIENT_ID;
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+
 const client = new MongoClient(process.env.MONGODB_URI!);
 const db = client.db();
 export const auth = betterAuth({
@@ -20,6 +23,15 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  socialProviders:
+    googleClientId && googleClientSecret
+      ? {
+          google: {
+            clientId: googleClientId,
+            clientSecret: googleClientSecret,
+          },
+        }
+      : {},
   databaseHooks: {
     user: {
       create: {

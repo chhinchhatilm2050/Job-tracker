@@ -12,13 +12,13 @@ export default async function Footer() {
           <div className="mb-8 max-w-2xl">
             <p className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
               <span className="h-px w-6 bg-primary" />
-              Made for your next move
+              Make room for what matters
             </p>
             <h2
               id="footer-features-title"
               className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
             >
-              Your job search, all in one place.
+              Your boards, tasks, and habits in one place.
             </h2>
           </div>
 
@@ -28,11 +28,11 @@ export default async function Footer() {
                 <Briefcase className="size-5" aria-hidden="true" />
               </div>
               <h3 className="mb-2 text-lg font-semibold tracking-tight text-foreground">
-                Organize applications
+                Plan any workflow
               </h3>
               <p className="text-sm text-center leading-6 text-muted-foreground">
-                Create boards and stages that fit your search, then keep every
-                application in one place.
+                Create boards for job searches, daily tasks, projects, and
+                habits, with columns that fit your process.
               </p>
               <div className="absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-500/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100 dark:via-zinc-400/40" />
             </article>
@@ -42,11 +42,12 @@ export default async function Footer() {
                 <TrendingUp className="size-5" aria-hidden="true" />
               </div>
               <h3 className="mb-2 text-lg font-semibold tracking-tight text-foreground">
-                Track your progress
+                Focus on today
               </h3>
               <p className="text-sm text-center leading-6 text-muted-foreground">
-                See every application at a glance and know what needs your
-                attention next.
+                Pin cards from any board or collect tasks due today and
+                overdue in My Day, then build a schedule that fits your time
+                and energy.
               </p>
               <div className="absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-500/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100 dark:via-zinc-400/40" />
             </article>
@@ -56,11 +57,11 @@ export default async function Footer() {
                 <CheckCircle2 className="size-5" aria-hidden="true" />
               </div>
               <h3 className="mb-2 text-lg font-semibold tracking-tight text-foreground">
-                Stay on top of details
+                Keep moving
               </h3>
               <p className="text-sm text-center leading-6 text-muted-foreground">
-                Keep notes, deadlines, and follow-ups together so nothing
-                important slips through.
+                Set due dates and priorities, break work into subtasks, and
+                use focus sessions and daily wrap-up to keep moving.
               </p>
               <div className="absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-500/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100 dark:via-zinc-400/40" />
             </article>
@@ -75,7 +76,7 @@ export default async function Footer() {
             <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
               <Layers className="size-4" aria-hidden="true" />
             </span>
-            <span className="font-semibold tracking-tight">J◎B Tracker</span>
+            <span className="font-semibold tracking-tight">Task Flow</span>
           </Link>
 
           <nav
@@ -106,7 +107,7 @@ export default async function Footer() {
           </nav>
 
           <p className="text-center text-xs text-muted-foreground">
-            © {year} Job Tracker. All rights reserved.
+            © {year} Task Flow. All rights reserved.
           </p>
         </div>
       </div>

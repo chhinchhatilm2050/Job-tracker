@@ -9,7 +9,12 @@ import BoardHeader from "@/components/boardHeader";
 import EmptyBoardState from "@/components/emptyBoardState";
 
 interface DashboardPageProps {
-  searchParams?: Promise<{ boardId?: string }>;
+  searchParams?: Promise<{
+    boardId?: string;
+    googleLinked?: string;
+    error?: string;
+    error_description?: string;
+  }>;
 }
 
 async function getUserBoards(userId: string, requestedBoardId?: string) {
@@ -74,12 +79,30 @@ async function DashboardContent({ searchParams }: DashboardPageProps) {
   return (
     <div className="min-h-screen bg-slate-50/50 dark:bg-zinc-950 transition-colors">
       <div className="mx-auto max-w-7xl px-6 py-6">
+        {params?.googleLinked === "1" && (
+          <div
+            role="status"
+            className="mb-4 rounded-md border border-green-500/30 bg-green-500/10 px-4 py-3 text-sm text-green-700 dark:text-green-300"
+          >
+            Google account linked. You can now sign in with Google.
+          </div>
+        )}
+        {params?.error && (
+          <div
+            role="alert"
+            className="mb-4 rounded-md bg-destructive/15 px-4 py-3 text-sm text-destructive"
+          >
+            Google account could not be linked:{" "}
+            {params.error_description ?? params.error}
+          </div>
+        )}
         {activeBoard ? (
           <>
             <BoardHeader
               boards={boards}
               currentBoardId={activeBoard._id}
               currentBoardName={activeBoard.name}
+              boardType={activeBoard.boardType ?? "job_tracker"}
             />
             <KanbanBoard board={activeBoard} userId={session.user.id} />
           </>

@@ -21,28 +21,28 @@ export default function EmptyBoardState() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center py-20 px-4 text-center max-w-lg mx-auto">
-      <div className="h-16 w-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-5">
+    <div className="mx-auto flex max-w-2xl flex-col items-center justify-center rounded-3xl border border-border/80 bg-card px-6 py-14 text-center shadow-sm sm:px-10">
+      <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
         <Kanban className="size-8" />
       </div>
 
-      <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-zinc-100 mb-2">
-        No Boards Found
+      <h2 className="mb-2 text-2xl font-bold tracking-tight text-foreground">
+        Start with a board
       </h2>
 
-      <p className="text-sm text-gray-500 dark:text-zinc-400 mb-8 leading-relaxed">
-        You currently don&apos;t have any job boards. You can initialize the standard
-        Job Hunt board with default stages, or create a custom board tailored to your workflow.
+      <p className="mb-8 max-w-md text-sm leading-relaxed text-muted-foreground">
+        Choose a ready-made workflow for your job search or daily tasks, or
+        build a blank board around the way you work.
       </p>
 
       <div className="flex flex-col sm:flex-row items-center gap-3 w-full justify-center">
         <Button
           onClick={handleInitDefault}
           disabled={initializing}
-          className="w-full sm:w-auto gap-2 cursor-pointer"
+          className="w-full gap-2 sm:w-auto"
         >
           <Sparkles className="size-4" />
-          <span>{initializing ? "Initializing..." : "Initialize Default Board"}</span>
+          <span>{initializing ? "Creating..." : "Create Job Hunt Board"}</span>
         </Button>
 
         <CreateBoardDialog
@@ -50,7 +50,7 @@ export default function EmptyBoardState() {
             <Button
               variant="outline"
               disabled={initializing}
-              className="w-full sm:w-auto cursor-pointer"
+              className="w-full sm:w-auto"
             >
               Create Custom Board
             </Button>

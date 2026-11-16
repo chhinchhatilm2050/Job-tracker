@@ -5,24 +5,68 @@ import { getSession } from "../auth/auth";
 import connectDB from "../db";
 import { Board, Column, JobApplication } from "../models";
 import { initializeUserBoard } from "../initUserBoard";
+import type { ColumnColor } from "../models/models.types";
 
-const DEFAULT_COLUMNS = [
-  "Wish List",
-  "Applied",
-  "Interviewing",
-  "Offer",
-  "Rejected",
-];
+const BOARD_TYPES = ["job_tracker", "general_tasks", "habits"] as const;
+const COLUMN_COLORS = [
+  "cyan",
+  "violet",
+  "emerald",
+  "amber",
+  "rose",
+  "blue",
+  "slate",
+] as const;
 
-export async function createBoard(name: string, customColumns?: string[]) {
+interface BoardColumnInput {
+  name: string;
+  color: ColumnColor;
+}
+
+export async function createBoard(data: {
+  name: string;
+  boardType: (typeof BOARD_TYPES)[number];
+  columns: BoardColumnInput[];
+}) {
   const session = await getSession();
   if (!session?.user) {
     return { error: "Unauthorized" };
   }
 
-  const trimmedName = name?.trim();
-  if (!trimmedName) {
-    return { error: "Board name is required" };
+  if (!data || typeof data.name !== "string" || !Array.isArray(data.columns)) {
+    return { error: "Board details are invalid" };
+  }
+  const trimmedName = data.name.trim();
+  if (!trimmedName || trimmedName.length > 60) {
+    return { error: "Board name must be between 1 and 60 characters" };
+  }
+  if (!BOARD_TYPES.includes(data.boardType)) {
+    return { error: "Board type is invalid" };
+  }
+  if (
+    data.columns.some(
+      (column) => !column || typeof column.name !== "string",
+    )
+  ) {
+    return { error: "Column details are invalid" };
+  }
+
+  const columns = data.columns
+    .map((column) => ({
+      name: column.name.trim(),
+      color: column.color,
+    }))
+    .filter((column) => column.name.length > 0);
+
+  if (
+    columns.length === 0 ||
+    columns.length > 12 ||
+    columns.some((column) => column.name.length > 40)
+  ) {
+    return { error: "A board must have between 1 and 12 columns, each up to 40 characters" };
+  }
+  if (columns.some((column) => !COLUMN_COLORS.includes(column.color))) {
+    return { error: "Column color is invalid" };
   }
 
   await connectDB();
@@ -31,17 +75,15 @@ export async function createBoard(name: string, customColumns?: string[]) {
     const board = await Board.create({
       name: trimmedName,
       userId: session.user.id,
+      boardType: data.boardType,
       columns: [],
     });
 
-    const colList = (customColumns && customColumns.length > 0)
-      ? customColumns.filter((c) => c.trim().length > 0)
-      : DEFAULT_COLUMNS;
-
     const createdColumns = await Promise.all(
-      colList.map((colName, index) =>
+      columns.map((column, index) =>
         Column.create({
-          name: colName.trim(),
+          name: column.name,
+          color: column.color,
           order: index,
           boardId: board._id,
         })
@@ -88,6 +130,7 @@ export async function deleteBoard(boardId: string) {
     await Board.deleteOne({ _id: boardId, userId: session.user.id });
 
     revalidatePath("/dashboard");
+    revalidatePath("/my-day");
     return { success: true };
   } catch (err: unknown) {
     console.error("Failed to delete board:", err);

@@ -5,6 +5,7 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { ThemeProvider } from "@/components/themeProvider";
 import { Suspense } from "react";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,8 +18,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chhat — Job Application Tracker",
-  description: "Track and organize your job applications across every stage of your job hunt.",
+  title: "Task Flow",
+  description:
+    "Organize tasks, habits, projects, and job searches. Capture work quickly, plan your day, and focus on what matters next.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -42,6 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </Suspense>
           <main className="flex-1">{children}</main>
           <Footer />
+          <Toaster position="top-right" richColors closeButton theme="dark" />
         </ThemeProvider>
       </body>
     </html>

@@ -82,7 +82,10 @@ export default function CreateJobApplicationDialog({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Add Job Application</DialogTitle>
-          <DialogDescription>Track a new job application</DialogDescription>
+          <DialogDescription>
+            Track opportunities and drag each card through your stages as it
+            progresses from wishlist to applied, interview, and offer.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-4">

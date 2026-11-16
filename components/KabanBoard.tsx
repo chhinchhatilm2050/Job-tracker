@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { Board, Column, JobApplication } from "@/lib/models/models.types";
+import {
+  Board,
+  BoardType,
+  Column,
+  ColumnColor,
+  JobApplication,
+} from "@/lib/models/models.types";
 import {
   Award,
   Calendar,
@@ -50,6 +56,7 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import CreateJobApplicationDialog from "./createJobDialog";
+import CreateTaskDialog from "./createTaskDialog";
 import JobApplicationCard from "./jobApplicationCard";
 import {
   deleteColumn,
@@ -63,17 +70,27 @@ interface KanbanBoardProps {
 }
 
 interface ColConfig {
-  color: string;
+  color: ColumnColor;
   icon: React.ReactNode;
 }
 
-const COLUMN_CONFIG: Array<{ color: string; icon: React.ReactNode }> = [
-  { color: "bg-cyan-600", icon: <Calendar className="h-4 w-4" /> },
-  { color: "bg-purple-600", icon: <CheckCircle2 className="h-4 w-4" /> },
-  { color: "bg-emerald-600", icon: <Mic className="h-4 w-4" /> },
-  { color: "bg-amber-600", icon: <Award className="h-4 w-4" /> },
-  { color: "bg-rose-600", icon: <XCircle className="h-4 w-4" /> },
+const COLUMN_CONFIG: ColConfig[] = [
+  { color: "cyan", icon: <Calendar className="h-4 w-4" /> },
+  { color: "violet", icon: <CheckCircle2 className="h-4 w-4" /> },
+  { color: "emerald", icon: <Mic className="h-4 w-4" /> },
+  { color: "amber", icon: <Award className="h-4 w-4" /> },
+  { color: "rose", icon: <XCircle className="h-4 w-4" /> },
 ];
+
+const COLUMN_COLOR_CLASSES: Record<ColumnColor, string> = {
+  cyan: "bg-cyan-500/10 text-cyan-800 dark:bg-cyan-400/10 dark:text-cyan-200",
+  violet: "bg-violet-500/10 text-violet-800 dark:bg-violet-400/10 dark:text-violet-200",
+  emerald: "bg-emerald-500/10 text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-200",
+  amber: "bg-amber-500/10 text-amber-800 dark:bg-amber-400/10 dark:text-amber-200",
+  rose: "bg-rose-500/10 text-rose-800 dark:bg-rose-400/10 dark:text-rose-200",
+  blue: "bg-blue-500/10 text-blue-800 dark:bg-blue-400/10 dark:text-blue-200",
+  slate: "bg-slate-500/10 text-slate-800 dark:bg-slate-400/10 dark:text-slate-200",
+};
 
 // Custom collision detection: prefer pointerWithin for precision, fallback to closestCorners
 const customCollisionDetection: CollisionDetection = (args) => {
@@ -88,11 +105,13 @@ const customCollisionDetection: CollisionDetection = (args) => {
 function DraggableJobCard({
   job,
   columns,
+  boardType,
   onMove,
   onDelete,
 }: {
   job: JobApplication & { columnId: string };
   columns: Column[];
+  boardType: BoardType;
   onMove: (jobId: string, targetColumnId: string) => void;
   onDelete: (jobId: string) => void | Promise<void>;
 }) {
@@ -139,6 +158,7 @@ function DraggableJobCard({
       <JobApplicationCard
         job={job}
         columns={columns}
+        boardType={boardType}
         onMove={onMove}
         onDelete={onDelete}
       />
@@ -151,6 +171,8 @@ function DroppableColumn({
   column,
   config,
   boardId,
+  boardType,
+  fitDesktopGrid,
   sortedColumns,
   isOver,
   onMoveJob,
@@ -161,6 +183,8 @@ function DroppableColumn({
   };
   config: ColConfig;
   boardId: string;
+  boardType: BoardType;
+  fitDesktopGrid: boolean;
   sortedColumns: Column[];
   isOver: boolean;
   onMoveJob: (jobId: string, targetColumnId: string) => void;
@@ -205,25 +229,32 @@ function DroppableColumn({
   }
 
   return (
-    <div ref={setNodeRef} className="shrink-0 h-[80vh]">
+    <div
+      ref={setNodeRef}
+      className={`h-[min(70vh,720px)] min-h-[460px] w-[min(86vw,320px)] shrink-0 ${
+        fitDesktopGrid ? "xl:w-auto xl:min-w-0" : ""
+      }`}
+    >
       <Card
-        className={`w-80 h-full p-0 flex flex-col rounded-xl overflow-hidden shadow-lg border border-black/10 transition-all duration-150 ${
+        className={`h-full w-full border p-0 flex flex-col rounded-2xl overflow-hidden shadow-sm transition-all duration-150 ${
           isDeleting ? "opacity-50 pointer-events-none" : ""
         } ${
           isOver
-            ? "border-primary ring-2 ring-primary/30 bg-primary/5 dark:bg-primary/10"
-            : "border-gray-200 dark:border-zinc-800 bg-slate-50/60 dark:bg-zinc-900/60"
+            ? "border-primary ring-2 ring-primary/30 bg-primary/5"
+            : "border-border/80 bg-card"
         }`}
       >
         <CardHeader
-          className={`${config.color} text-white flex flex-row items-center justify-between px-4 py-3 border-b border-black/10 shrink-0`}
+          className={`${COLUMN_COLOR_CLASSES[config.color]} flex flex-row items-center justify-between gap-2 border-b border-border/70 px-4 py-3 shrink-0`}
         >
-          <div className="flex items-center gap-2">
-            {config.icon}
-            <CardTitle className="text-white text-sm font-semibold tracking-wide">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-background/70">
+              {config.icon}
+            </span>
+            <CardTitle className="truncate text-sm font-semibold tracking-wide">
               {column.name}
             </CardTitle>
-            <span className="ml-1 rounded-full bg-white/20 px-2 py-0.5 text-xs font-semibold text-white">
+            <span className="shrink-0 rounded-full bg-background/70 px-2 py-0.5 text-xs font-semibold text-foreground">
               {sortedJobs.length}
             </span>
           </div>
@@ -234,7 +265,7 @@ function DroppableColumn({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7 text-white cursor-pointer hover:bg-white/20 rounded-md"
+                  className="h-8 w-8 shrink-0 text-current cursor-pointer hover:bg-background/70 rounded-lg"
                 />
               }
             >
@@ -258,22 +289,27 @@ function DroppableColumn({
 
         <CardContent className="flex flex-col flex-1 min-h-0 space-y-3 p-3 overflow-hidden">
           <div className="shrink-0">
-            <CreateJobApplicationDialog
-              columnId={column._id}
-              boardId={boardId}
-            />
+            {boardType === "job_tracker" ? (
+              <CreateJobApplicationDialog
+                columnId={column._id}
+                boardId={boardId}
+              />
+            ) : (
+              <CreateTaskDialog columnId={column._id} boardId={boardId} />
+            )}
           </div>
 
           <SortableContext
             items={sortedJobs.map((j) => j._id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="space-y-3 flex-1 overflow-y-auto no-scrollbar pb-1 min-h-[100px]">
+            <div className="no-scrollbar flex min-h-[100px] flex-1 flex-col space-y-3 overflow-y-auto pb-1">
               {sortedJobs.map((job) => (
                 <DraggableJobCard
                   key={job._id}
                   job={{ ...job, columnId: job.columnId || column._id }}
                   columns={sortedColumns}
+                  boardType={boardType}
                   onMove={onMoveJob}
                   onDelete={onDeleteJob}
                 />
@@ -281,15 +317,27 @@ function DroppableColumn({
 
               {sortedJobs.length === 0 && (
                 <div
-                  className={`flex flex-col items-center justify-center p-8 text-center text-xs border border-dashed rounded-lg transition-colors ${
+                  className={`flex min-h-[180px] flex-1 flex-col items-center justify-center rounded-xl border border-dashed px-5 py-8 text-center transition-colors ${
                     isOver
-                      ? "border-primary bg-primary/10 text-primary font-medium"
-                      : "text-muted-foreground dark:text-zinc-400 bg-white/40 dark:bg-zinc-800/40 border-gray-200 dark:border-zinc-700"
+                      ? "border-primary bg-primary/5 text-primary"
+                      : "border-border/80 bg-muted/30 text-muted-foreground"
                   }`}
                 >
-                  {isOver
-                    ? "Release to drop here"
-                    : "No jobs in this stage yet."}
+                  {isOver ? (
+                    <p className="text-sm font-medium">Release to add here</p>
+                  ) : (
+                    <>
+                      <span className="mb-3 flex size-9 items-center justify-center rounded-full bg-background text-muted-foreground shadow-sm">
+                        <CheckCircle2 className="size-4" />
+                      </span>
+                      <p className="text-sm font-medium text-foreground">
+                        This stage is clear
+                      </p>
+                      <p className="mt-1 max-w-[190px] text-xs leading-5">
+                        Add a card above or move one here when it is ready.
+                      </p>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -311,8 +359,7 @@ function DroppableColumn({
               <span className="font-semibold text-black dark:text-white">
                 {column.name}
               </span>
-              &quot; and all job applications in it? This action cannot be
-              undone.
+              &quot; and all cards in it? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
 
@@ -622,11 +669,20 @@ export function KanbanBoard({ board, userId }: KanbanBoardProps) {
           No board found
         </h3>
         <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">
-          Your job hunting board has not been initialized yet.
+          This board does not have any columns yet.
         </p>
       </div>
     );
   }
+
+  const fitDesktopGrid = columns.length > 1 && columns.length <= 4;
+  const desktopGridClass = fitDesktopGrid
+    ? {
+        2: "xl:grid xl:grid-cols-2 xl:overflow-x-visible",
+        3: "xl:grid xl:grid-cols-3 xl:overflow-x-visible",
+        4: "xl:grid xl:grid-cols-4 xl:overflow-x-visible",
+      }[columns.length]
+    : "";
 
   return (
     <DndContext
@@ -639,11 +695,15 @@ export function KanbanBoard({ board, userId }: KanbanBoardProps) {
       onDragCancel={handleDragCancel}
     >
       <div className="w-full">
-        <div className="flex flex-row items-start gap-5 overflow-x-auto pb-8 pt-2 no-scrollbar">
+        <div
+          aria-label="Board columns"
+          className={`flex flex-row items-start gap-4 overflow-x-auto overscroll-x-contain pb-5 pt-2 no-scrollbar ${desktopGridClass}`}
+        >
           {columns.map((col, key) => {
-            const config = COLUMN_CONFIG[key % COLUMN_CONFIG.length] || {
-              color: "bg-slate-600",
-              icon: <Calendar className="h-4 w-4" />,
+            const fallbackConfig = COLUMN_CONFIG[key % COLUMN_CONFIG.length];
+            const config: ColConfig = {
+              ...fallbackConfig,
+              color: col.color ?? fallbackConfig.color,
             };
             return (
               <DroppableColumn
@@ -651,6 +711,8 @@ export function KanbanBoard({ board, userId }: KanbanBoardProps) {
                 column={col}
                 config={config}
                 boardId={board._id}
+                boardType={board.boardType ?? "job_tracker"}
+                fitDesktopGrid={fitDesktopGrid}
                 sortedColumns={columns}
                 isOver={overColumnId === col._id}
                 onMoveJob={handleMoveJob}
@@ -665,7 +727,11 @@ export function KanbanBoard({ board, userId }: KanbanBoardProps) {
       <DragOverlay dropAnimation={{ duration: 180, easing: "ease" }}>
         {activeJob ? (
           <div className="w-80 pointer-events-none rotate-2 scale-105 shadow-2xl opacity-95">
-            <JobApplicationCard job={activeJob} columns={columns} />
+            <JobApplicationCard
+              job={activeJob}
+              columns={columns}
+              boardType={board.boardType ?? "job_tracker"}
+            />
           </div>
         ) : null}
       </DragOverlay>
