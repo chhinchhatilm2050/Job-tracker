@@ -51,7 +51,7 @@ export default function WorkflowGuide() {
     <section
       id="product-features"
       aria-labelledby="workflow-guide-title"
-      className="border-y border-zinc-200/70 bg-white py-20 transition-colors dark:border-zinc-800 dark:bg-zinc-950 sm:py-28"
+      className=" border-zinc-200/70 bg-white py-20 transition-colors dark:border-zinc-800 dark:bg-zinc-950 sm:py-28"
     >
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-3xl text-center">

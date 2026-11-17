@@ -56,7 +56,7 @@ export default function AboutPage() {
               return (
                 <article
                   key={feature.title}
-                  className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40"
+                  className="rounded-2xl flex justify-center items-center flex-col border border-gray-200 bg-white p-8 shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40"
                 >
                   <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gray-200 text-black dark:bg-zinc-800 dark:text-zinc-100">
                     <Icon className="h-6 w-6" aria-hidden="true" />
@@ -64,7 +64,7 @@ export default function AboutPage() {
                   <h2 className="text-xl font-bold text-gray-900 dark:text-zinc-100">
                     {feature.title}
                   </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-zinc-400">
+                  <p className="mt-3 text-center text-sm leading-relaxed text-gray-600 dark:text-zinc-400">
                     {feature.description}
                   </p>
                 </article>

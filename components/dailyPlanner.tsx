@@ -25,6 +25,11 @@ import type {
 } from "@/lib/models/models.types";
 import { Button } from "./ui/button";
 import { ComboboxSelect } from "./ui/combobox";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 interface DailyPlannerProps {
   cards: MyDayCard[];
@@ -223,20 +228,31 @@ export default function DailyPlanner({ cards, plan, onStartFocus }: DailyPlanner
         <div className="flex flex-wrap items-end gap-3">
           <label className="grid gap-1 text-xs font-medium text-muted-foreground">
             Start time
-            <input
-              aria-label="Schedule start time"
-              type="time"
-              min="00:00"
-              max={formatTimeInput(24 * 60 - plan.availableHours * 60)}
-              step={900}
-              value={formatTimeInput(plan.startMinute)}
-              onChange={(event) =>
-                void saveSettings({
-                  startMinute: parseTimeInput(event.target.value),
-                })
-              }
-              className="h-9 rounded-lg border border-input bg-background px-3 text-sm text-foreground"
-            />
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <input
+                    aria-label="Schedule start time"
+                    type="time"
+                    min="00:00"
+                    max={formatTimeInput(
+                      24 * 60 - plan.availableHours * 60,
+                    )}
+                    step={900}
+                    value={formatTimeInput(plan.startMinute)}
+                    onChange={(event) =>
+                      void saveSettings({
+                        startMinute: parseTimeInput(event.target.value),
+                      })
+                    }
+                    className="h-9 rounded-lg border border-input bg-background px-3 text-sm text-foreground"
+                  />
+                }
+              />
+              <TooltipContent>
+                Choose when your daily schedule should begin.
+              </TooltipContent>
+            </Tooltip>
           </label>
           <label className="grid gap-1 text-xs font-medium text-muted-foreground">
             Available today

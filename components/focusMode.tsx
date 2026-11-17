@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { logFocusMinutes } from "@/lib/action/myDay";
 import type { EnergyLevel, MyDayCard } from "@/lib/models/models.types";
 import { Button } from "./ui/button";
+import { HeroBackground } from "./heroBackground";
 
 interface FocusModeProps {
   card: MyDayCard;
@@ -71,6 +72,18 @@ export default function FocusMode({
   const [error, setError] = useState("");
   const completionHandled = useRef(false);
   const phaseStartedAt = useRef(0);
+
+  useEffect(() => {
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousDocumentOverflow;
+    };
+  }, []);
 
   useEffect(() => {
     if (phaseStartedAt.current === 0) {
@@ -199,12 +212,9 @@ export default function FocusMode({
       role="dialog"
       aria-modal="true"
       aria-labelledby="focus-title"
-      className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center overflow-y-auto bg-zinc-950 px-5 py-10 text-white"
+      className="hero-video-simulation fixed inset-0 z-[100] isolate flex h-dvh items-center justify-center overflow-hidden bg-zinc-950 px-5 py-10 text-white"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_35%,rgba(99,102,241,0.2),transparent_55%)]"
-      />
+      <HeroBackground />
       <div className="relative z-10 w-full max-w-xl text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
           {phase === "estimateReached"

@@ -39,6 +39,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "./ui/tooltip";
 import EditJobApplicationDialog from "./editJobDialog";
 import {
   deleteJobApplication,
@@ -181,31 +186,47 @@ export default function JobApplicationCard({
       >
         <CardContent className="flex flex-1 items-start gap-3 p-4">
           {boardType !== "job_tracker" && (
-            <button
-              type="button"
-              aria-label={job.isCompleted ? "Mark card incomplete" : "Mark card complete"}
-              disabled={isUpdatingCompletion}
-              onPointerDown={(event) => event.stopPropagation()}
-              onClick={handleToggleCompletion}
-              className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border ${
-                job.isCompleted
-                  ? "border-emerald-600 bg-emerald-600 text-white"
-                  : "border-muted-foreground/50 text-transparent hover:border-primary"
-              }`}
-            >
-              <Check className="size-3" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <button
+                    type="button"
+                    aria-label={
+                      job.isCompleted
+                        ? "Mark card incomplete"
+                        : "Mark card complete"
+                    }
+                    disabled={isUpdatingCompletion}
+                    onPointerDown={(event) => event.stopPropagation()}
+                    onClick={handleToggleCompletion}
+                    className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border ${
+                      job.isCompleted
+                        ? "border-emerald-600 bg-emerald-600 text-white"
+                        : "border-muted-foreground/50 text-transparent hover:border-primary"
+                    }`}
+                  >
+                    <Check className="size-3" />
+                  </button>
+                }
+              />
+              <TooltipContent>
+                {job.isCompleted ? "Mark card incomplete" : "Mark card complete"}
+              </TooltipContent>
+            </Tooltip>
           )}
           <div className="min-w-0 flex-1 space-y-2.5">
             <div className="space-y-2">
               <div className="flex items-start gap-1.5">
-                <div
-                  aria-hidden="true"
-                  className="mt-0.5 -ml-1 cursor-grab rounded p-0.5 text-muted-foreground/60 transition-colors hover:text-muted-foreground active:cursor-grabbing"
-                  title="Drag to move"
-                >
-                  <GripVertical className="size-4 shrink-0" />
-                </div>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <div className="mt-0.5 -ml-1 cursor-grab rounded p-0.5 text-muted-foreground/60 transition-colors hover:text-muted-foreground active:cursor-grabbing">
+                        <GripVertical className="size-4 shrink-0" />
+                      </div>
+                    }
+                  />
+                  <TooltipContent>Drag to move</TooltipContent>
+                </Tooltip>
                 <h3 className="min-w-0 flex-1 text-sm font-semibold leading-tight text-foreground">
                   <button
                     type="button"
@@ -342,17 +363,25 @@ export default function JobApplicationCard({
             onClick={(e) => e.stopPropagation()}
           >
             <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-7 w-7 text-foreground cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md"
-                  />
-                }
-              >
-                <MoreVertical className="size-4" />
-              </DropdownMenuTrigger>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <DropdownMenuTrigger
+                      render={
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label="Open card actions"
+                          className="h-7 w-7 text-foreground cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md"
+                        />
+                      }
+                    />
+                  }
+                >
+                  <MoreVertical className="size-4" />
+                </TooltipTrigger>
+                <TooltipContent>More actions</TooltipContent>
+              </Tooltip>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuGroup>
                   <DropdownMenuItem

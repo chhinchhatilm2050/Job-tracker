@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { signIn } from "@/lib/auth/auth.client";
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -20,8 +19,6 @@ export default function SignIn() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -37,7 +34,7 @@ export default function SignIn() {
       if (restul.error) {
         setError(restul.error.message ?? "Failed to sign in");
       } else {
-        router.push("/dashboard")
+        window.location.replace("/dashboard");
       }
     } catch {
       setError("An unexpected error ocurred");

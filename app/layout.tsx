@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { ThemeProvider } from "@/components/themeProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
 
@@ -42,12 +43,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-200">
         <ThemeProvider>
-          <Suspense fallback={<div className="h-16 border-b border-border bg-background" />}>
-            <Navbar />
-          </Suspense>
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <Toaster position="top-right" richColors closeButton theme="dark" />
+          <TooltipProvider>
+            <Suspense fallback={<div className="h-16 border-b border-border bg-background" />}>
+              <Navbar />
+            </Suspense>
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <Toaster position="top-right" richColors closeButton theme="dark" />
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

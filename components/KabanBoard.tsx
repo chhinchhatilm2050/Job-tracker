@@ -48,6 +48,11 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -261,17 +266,25 @@ function DroppableColumn({
           </div>
 
           <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 shrink-0 text-current cursor-pointer hover:bg-background/70 rounded-lg"
-                />
-              }
-            >
-              <MoreVertical className="h-4 w-4" />
-            </DropdownMenuTrigger>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <DropdownMenuTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={`Open ${column.name} column actions`}
+                        className="h-8 w-8 shrink-0 text-current cursor-pointer hover:bg-background/70 rounded-lg"
+                      />
+                    }
+                  />
+                }
+              >
+                <MoreVertical className="h-4 w-4" />
+              </TooltipTrigger>
+              <TooltipContent>Column actions</TooltipContent>
+            </Tooltip>
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuGroup>
                 <DropdownMenuItem

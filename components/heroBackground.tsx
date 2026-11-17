@@ -40,7 +40,7 @@ export function HeroBackground() {
 
       {/* Interactive Mouse & Scroll Spotlight Glow */}
       <motion.div
-        className="absolute h-[500px] w-[500px] rounded-full bg-gradient-to-r from-red-500/25 via-red-500/20 to-black/25 blur-[100px]"
+        className="absolute h-[500px] w-[500px] rounded-full bg-gradient-to-r from-indigo-500/20 via-red-500/15 to-emerald-500/10 blur-[100px]"
         animate={{
           x: mousePosition.x - 250,
           y: mousePosition.y - 250 + scrollY * 0.4,
@@ -53,7 +53,6 @@ export function HeroBackground() {
         }}
       />
 
-      {/* Stronger Animated Indigo Orb */}
       <motion.div
         animate={{
           x: [-40, 80, -40],
@@ -65,10 +64,9 @@ export function HeroBackground() {
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute -top-20 left-1/4 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-red-300/10 blur-3xl"
+        className="absolute -top-20 left-1/4 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-red-700/15 blur-3xl"
       />
 
-      {/* Stronger Animated Sky/Cyan Orb */}
       <motion.div
         animate={{
           x: [40, -80, 40],
@@ -80,7 +78,7 @@ export function HeroBackground() {
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute top-10 right-1/4 h-[28rem] w-[28rem] translate-x-1/2 rounded-full bg-white/10 blur-3xl"
+        className="absolute top-10 right-1/4 h-[28rem] w-[28rem] translate-x-1/2 rounded-full bg-red-600/10 blur-3xl"
       />
 
       {/* Falling Grid Beams */}
