@@ -2,7 +2,15 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, Clock3, Sun } from "lucide-react";
+import {
+  AlertTriangle,
+  BatteryLow,
+  BatteryMedium,
+  Clock3,
+  Sun,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 import {
   autoPlanMyDay,
   moveTasksToTomorrow,
@@ -22,16 +30,16 @@ interface DailyPlannerProps {
   cards: MyDayCard[];
   plan: DailyPlanData;
   onStartFocus: (card: MyDayCard) => void;
-}
+};
 
 const ENERGY_OPTIONS: Array<{
   value: EnergyLevel;
   label: string;
-  icon: string;
+  icon: LucideIcon;
 }> = [
-  { value: "high", label: "High", icon: "⚡" },
-  { value: "normal", label: "Normal", icon: "🔋" },
-  { value: "low", label: "Low", icon: "🪫" },
+  { value: "high", label: "High", icon: Zap },
+  { value: "normal", label: "Normal", icon: BatteryMedium },
+  { value: "low", label: "Low", icon: BatteryLow },
 ];
 
 function formatClock(totalMinutes: number) {
@@ -87,11 +95,7 @@ function getEnergyReason(effort: TaskEffort, energy: EnergyLevel) {
   return `${effort[0].toUpperCase()}${effort.slice(1)} effort balanced with priority and due date`;
 }
 
-export default function DailyPlanner({
-  cards,
-  plan,
-  onStartFocus,
-}: DailyPlannerProps) {
+export default function DailyPlanner({ cards, plan, onStartFocus }: DailyPlannerProps) {
   const [isPlanning, setIsPlanning] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
   const [error, setError] = useState("");
@@ -120,9 +124,11 @@ export default function DailyPlanner({
     (total, card) => total + (card.estimatedDurationMinutes ?? 30),
     0,
   );
-  const liveOverbookedMinutes = Math.max(0, totalMinutes - plan.availableHours * 60);
-  const visibleOverbookedMinutes =
-    overbookedMinutes || liveOverbookedMinutes;
+  const liveOverbookedMinutes = Math.max(
+    0,
+    totalMinutes - plan.availableHours * 60,
+  );
+  const visibleOverbookedMinutes = overbookedMinutes || liveOverbookedMinutes;
   const maxAvailableHours = Math.min(
     9,
     Math.floor((24 * 60 - plan.startMinute) / 60),
@@ -130,8 +136,7 @@ export default function DailyPlanner({
   const hiddenCards = cards.filter((card) =>
     hiddenCardIds.length > 0
       ? hiddenCardIds.includes(card._id)
-      : plan.energyLevel === "low" &&
-        isHeavyTask(toSchedulableCard(card)),
+      : plan.energyLevel === "low" && isHeavyTask(toSchedulableCard(card)),
   );
 
   async function saveSettings(settings: {
@@ -226,7 +231,9 @@ export default function DailyPlanner({
               step={900}
               value={formatTimeInput(plan.startMinute)}
               onChange={(event) =>
-                void saveSettings({ startMinute: parseTimeInput(event.target.value) })
+                void saveSettings({
+                  startMinute: parseTimeInput(event.target.value),
+                })
               }
               className="h-9 rounded-lg border border-input bg-background px-3 text-sm text-foreground"
             />
@@ -280,11 +287,9 @@ export default function DailyPlanner({
                   plan.energyLevel === option.value ? "default" : "outline"
                 }
                 aria-pressed={plan.energyLevel === option.value}
-                onClick={() =>
-                  void saveSettings({ energyLevel: option.value })
-                }
+                onClick={() => void saveSettings({ energyLevel: option.value })}
               >
-                <span aria-hidden="true">{option.icon}</span>
+                <option.icon aria-hidden="true" className="size-4" />
                 {option.label}
               </Button>
             ))}
@@ -299,8 +304,8 @@ export default function DailyPlanner({
         >
           <p className="flex items-center gap-2">
             <AlertTriangle className="size-4 shrink-0 text-amber-600" />
-            You&apos;re overbooked by {formatDuration(visibleOverbookedMinutes)}.
-            Move unplanned tasks to tomorrow?
+            You&apos;re overbooked by {formatDuration(visibleOverbookedMinutes)}
+            . Move unplanned tasks to tomorrow?
           </p>
           {unscheduledCards.length > 0 && (
             <Button
@@ -345,9 +350,8 @@ export default function DailyPlanner({
 
       <div className="mt-5 space-y-3">
         <p className="text-xs font-medium text-muted-foreground">
-          Planned window: {formatClock(plan.startMinute)}–{formatClock(
-            plan.startMinute + plan.availableHours * 60,
-          )}
+          Planned window: {formatClock(plan.startMinute)}–
+          {formatClock(plan.startMinute + plan.availableHours * 60)}
         </p>
         <div className="space-y-2">
           {plan.schedule.map((block) => {

@@ -78,7 +78,7 @@ export default function BrainDumpDialog() {
         aria-label="Quick capture (Control or Command K)"
         onClick={() => setOpen(true)}
       >
-        <Plus className="size-4" />
+        <Command className="size-4" />
         <span className="hidden sm:inline">Quick capture</span>
         <kbd className="hidden rounded border px-1 text-[10px] text-muted-foreground lg:inline">
           Ctrl K

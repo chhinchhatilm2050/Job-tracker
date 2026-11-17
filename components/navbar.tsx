@@ -8,11 +8,12 @@ import {
   LayoutDashboard,
   Info,
   Sun,
-  Menu,
   X,
   LogOut,
   Layers,
   Link2,
+  GraphStar,
+  LayoutGrid,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -123,25 +124,23 @@ export default function Navbar() {
       <header className="sticky top-0 z-40 w-full border-b border-gray-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-zinc-950/80 transition-colors">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           {/* Left: Hamburger (mobile) + Brand Logo + Desktop Nav */}
-          <div className="flex items-center gap-3 sm:gap-6">
+          <div className="flex items-center gap-1 sm:gap-6">
             {/* Hamburger Button (Phone / Mobile screen only) */}
-            <Button
-              variant="ghost"
-              size="icon"
+            <div
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden h-9 w-9 text-gray-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 cursor-pointer"
+              className="md:hidden h-9 w-9 flex justify-start items-center text-gray-700 dark:text-zinc-200  cursor-pointer"
               aria-label="Open mobile menu"
             >
-              <Menu className="size-5" />
-            </Button>
+              <LayoutGrid className="size-7 font-medium" />
+            </div>
 
             {/* Brand Logo */}
             <Link
               href="/"
               className="flex items-center gap-2.5 text-base sm:text-lg font-bold tracking-tight text-gray-900 dark:text-zinc-100 transition hover:opacity-90"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-                <Layers className="size-5" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-r-xl rounded-b-xl bg-primary text-primary-foreground shadow-sm">
+                <GraphStar className="size-5" />
               </div>
               <span className="whitespace-nowrap">Task Flow</span>
             </Link>
@@ -261,8 +260,8 @@ export default function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="flex items-center gap-2.5 font-bold text-gray-900 dark:text-zinc-100"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <Layers className="size-4" />
+                <div className="flex h-8 w-8 items-center rounded-r-xl rounded-b-xl justify-center  bg-primary text-primary-foreground">
+                  <GraphStar className="size-4" />
                 </div>
                 <span>Task Flow</span>
               </Link>

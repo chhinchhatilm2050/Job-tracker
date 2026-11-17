@@ -102,6 +102,65 @@ export async function createBoard(data: {
   }
 }
 
+export async function addColumn(
+  boardId: string,
+  name: string,
+  color: ColumnColor,
+) {
+  const session = await getSession();
+  if (!session?.user) {
+    return { error: "Unauthorized" };
+  }
+
+  if (typeof boardId !== "string" || !boardId) {
+    return { error: "Board ID is required" };
+  }
+  if (typeof name !== "string" || !name.trim() || name.trim().length > 40) {
+    return { error: "Column name must be between 1 and 40 characters" };
+  }
+  if (!COLUMN_COLORS.includes(color)) {
+    return { error: "Column color is invalid" };
+  }
+
+  await connectDB();
+
+  try {
+    const board = await Board.findOne({
+      _id: boardId,
+      userId: session.user.id,
+    });
+    if (!board) {
+      return { error: "Board not found or unauthorized" };
+    }
+
+    const columnCount = await Column.countDocuments({ boardId });
+    if (columnCount >= 12) {
+      return { error: "A board can have no more than 12 columns" };
+    }
+
+    const lastColumn = await Column.findOne({ boardId })
+      .sort({ order: -1 })
+      .select("order")
+      .lean();
+    const column = await Column.create({
+      name: name.trim(),
+      color,
+      order: lastColumn ? lastColumn.order + 1 : 0,
+      boardId: board._id,
+    });
+
+    board.columns.push(column._id);
+    await board.save();
+
+    revalidatePath("/dashboard");
+    return { success: true, columnId: String(column._id) };
+  } catch (err: unknown) {
+    console.error("Failed to add column:", err);
+    const message = err instanceof Error ? err.message : "Failed to add column";
+    return { error: message };
+  }
+}
+
 export async function deleteBoard(boardId: string) {
   const session = await getSession();
   if (!session?.user) {

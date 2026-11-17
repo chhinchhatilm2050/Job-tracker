@@ -58,6 +58,7 @@ import {
 import CreateJobApplicationDialog from "./createJobDialog";
 import CreateTaskDialog from "./createTaskDialog";
 import JobApplicationCard from "./jobApplicationCard";
+import AddColumnDialog from "./addColumnDialog";
 import {
   deleteColumn,
   deleteJobApplication,
@@ -231,7 +232,7 @@ function DroppableColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`h-[min(70vh,720px)] min-h-[460px] w-[min(86vw,320px)] shrink-0 ${
+      className={`h-[min(70vh,720px)] min-h-[460px] w-full shrink-0 xl:w-[min(86vw,320px)] ${
         fitDesktopGrid ? "xl:w-auto xl:min-w-0" : ""
       }`}
     >
@@ -664,13 +665,18 @@ export function KanbanBoard({ board, userId }: KanbanBoardProps) {
 
   if (!board || !board.columns || board.columns.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-zinc-100">
-          No board found
-        </h3>
-        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">
-          This board does not have any columns yet.
-        </p>
+      <div className="w-full">
+        <div className="mb-3 flex justify-end">
+          <AddColumnDialog boardId={board._id} />
+        </div>
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-zinc-100">
+            No columns yet
+          </h3>
+          <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">
+            Add a column to start organizing cards on this board.
+          </p>
+        </div>
       </div>
     );
   }
@@ -695,9 +701,15 @@ export function KanbanBoard({ board, userId }: KanbanBoardProps) {
       onDragCancel={handleDragCancel}
     >
       <div className="w-full">
+        <div className="mb-3 flex justify-end">
+          <AddColumnDialog
+            boardId={board._id}
+            disabled={columns.length >= 12}
+          />
+        </div>
         <div
           aria-label="Board columns"
-          className={`flex flex-row items-start gap-4 overflow-x-auto overscroll-x-contain pb-5 pt-2 no-scrollbar ${desktopGridClass}`}
+          className={`flex flex-col items-stretch gap-4 overflow-x-hidden pb-5 pt-2 no-scrollbar xl:flex-row xl:items-start xl:overflow-x-auto xl:overscroll-x-contain ${desktopGridClass}`}
         >
           {columns.map((col, key) => {
             const fallbackConfig = COLUMN_CONFIG[key % COLUMN_CONFIG.length];

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Briefcase, CheckCircle2, Layers, TrendingUp } from "lucide-react";
+import { Briefcase, CheckCircle2, GraphStar, Layers, TrendingUp } from "lucide-react";
 
 export default async function Footer() {
   "use cache";
@@ -73,8 +73,8 @@ export default async function Footer() {
             href="/"
             className="flex items-center gap-3 rounded-lg text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-              <Layers className="size-4" aria-hidden="true" />
+            <span className="flex size-9 items-center justify-center rounded-b-xl rounded-r-xl bg-primary text-primary-foreground shadow-sm">
+              <GraphStar className="size-4" aria-hidden="true" />
             </span>
             <span className="font-semibold tracking-tight">Task Flow</span>
           </Link>
