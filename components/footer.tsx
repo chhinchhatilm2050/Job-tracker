@@ -76,7 +76,7 @@ export default async function Footer() {
             <span className="flex size-9 items-center justify-center rounded-b-xl rounded-r-xl bg-primary text-primary-foreground shadow-sm">
               <GraphStar className="size-4" aria-hidden="true" />
             </span>
-            <span className="font-semibold tracking-tight">Task Flow</span>
+            <span className="font-semibold tracking-tight">Life Flow</span>
           </Link>
 
           <nav
@@ -107,7 +107,7 @@ export default async function Footer() {
           </nav>
 
           <p className="text-center text-xs text-muted-foreground">
-            © {year} Task Flow. All rights reserved.
+            © {year} Life Flow. All rights reserved.
           </p>
         </div>
       </div>

@@ -10,10 +10,10 @@ import {
   Sun,
   X,
   LogOut,
-  Layers,
   Link2,
   GraphStar,
   LayoutGrid,
+  Wallet,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -113,11 +113,16 @@ export default function Navbar() {
       icon: LayoutDashboard,
     },
     {
+      name: "Money Flow",
+      href: "/money",
+      icon: Wallet,
+    },
+    {
       name: "About",
       href: "/about",
       icon: Info,
     },
-  ];
+  ].filter((link) => link.href !== "/money" || Boolean(session?.user));
 
   return (
     <>
@@ -142,7 +147,7 @@ export default function Navbar() {
               <div className="flex h-9 w-9 items-center justify-center rounded-r-xl rounded-b-xl bg-primary text-primary-foreground shadow-sm">
                 <GraphStar className="size-5" />
               </div>
-              <span className="whitespace-nowrap">Task Flow</span>
+              <span className="whitespace-nowrap">Life Flow</span>
             </Link>
           </div>
            {/* Desktop Nav Links (Hidden on phone screen) */}
@@ -263,7 +268,7 @@ export default function Navbar() {
                 <div className="flex h-8 w-8 items-center rounded-r-xl rounded-b-xl justify-center  bg-primary text-primary-foreground">
                   <GraphStar className="size-4" />
                 </div>
-                <span>Task Flow</span>
+                <span>Life Flow</span>
               </Link>
               <Button
                 variant="ghost"

@@ -112,3 +112,96 @@ Give users a 60-second evening review screen at 6:00 PM (or whenever they finish
 Shows a visual summary of what they accomplished today (tasks completed, hours focused, job applications sent).
 
 Automatically reschedules unfinished tasks into tomorrow's timeline with one click so they close their laptop with zero stress.
+
+<!-- New Feature about cash flow-->
+
+Project Spec: "Money Flow" — Smart Financial Command Center1. System Overview & Navigation ArchitectureModule Separation: Add a top-level navigation toggle or sidebar switch separating Tab 1: Focus Flow (Tasks) and Tab 2: Money Flow (Finance).Shared Global Utility: Extend the existing Cmd + K / Ctrl + K Quick-Bar to detect intent (Task vs. Expense) or allow switching modes via prefix (e.g., $ or spent).Design Philosophy: Zero manual dropdowns, automated recurring math, and proactive alerts instead of passive charts.2. Database Schema (Tables & Fields)Create these 4 core tables to power the module:JSON{
+  "financial_profile": {
+    "user_id": "string (PK)",
+    "monthly_income": "number",
+    "monthly_savings_goal": "number",
+    "currency_symbol": "string (default: '$')",
+    "no_spend_streak": "integer (default: 0)"
+  },
+  "transactions": {
+    "id": "uuid (PK)",
+    "user_id": "string (FK)",
+    "raw_input": "string",
+    "title": "string",
+    "amount": "number",
+    "category": "enum ['Food & Dining', 'Transport', 'Utilities', 'Subscriptions', 'Shopping', 'Entertainment', 'Health', 'Other']",
+    "date": "date (YYYY-MM-DD)",
+    "is_recurring": "boolean",
+    "recurring_id": "uuid (nullable, FK)"
+  },
+  "recurring_bills": {
+    "id": "uuid (PK)",
+    "user_id": "string (FK)",
+    "title": "string",
+    "amount": "number",
+    "category": "string",
+    "frequency": "enum ['daily', 'monthly', 'yearly']",
+    "next_due_date": "date",
+    "is_active": "boolean"
+  },
+  "cutout_challenges": {
+    "id": "uuid (PK)",
+    "user_id": "string (FK)",
+    "category": "string",
+    "target_cap_amount": "number",
+    "month_year": "string (YYYY-MM)",
+    "status": "enum ['active', 'completed', 'failed']"
+  }
+}
+3. Agent Implementation Tasks (Step-by-Step):
+
+Task 1: Natural Language Quick-Log Parser (Cmd + K Extension)Goal: Parse raw strings into structured transaction objects without form inputs.Logic Requirements:Amount Extraction: Match currency regex (e.g., \$?\d+(\.\d{1,2})?).Frequency Detection: Detect keywords (monthly, /mo, every month, yearly, /yr, daily). If found, route to recurring_bills AND log today's instance if applicable.Date Detection: Parse today, yesterday, or default to current date.Keyword Auto-Categorizer: Map keywords to categories using a dictionary:lunch, coffee, dinner, burger, grocery, food $\rightarrow$ Food & Dininguber, grab, gas, fuel, train, bus, parking $\rightarrow$ Transportelectric, water, internet, wifi, phone $\rightarrow$ Utilitiesnetflix, spotify, icloud, gym, subscription $\rightarrow$ SubscriptionsFallback: Show a 1-click confirmation pill with editable tags before saving.
+
+Task 2: Automated Recurring Engine & Silent Leak Detector
+Goal: Automate fixed bills and warn users before renewals.
+
+Logic Requirements:
+
+Cron / On-Load Check: When the app loads, check recurring_bills where next_due_date <= today and is_active == true. Automatically insert a row into transactions and advance next_due_date by 1 day, 1 month, or 1 year.
+
+3-Day Renewal Alert: Query recurring_bills where next_due_date is within today + 3 days. Display a dismissible banner: "Upcoming: [Title] ($[Amount]) renews in [X] days. Keep or Cancel?"
+
+
+Task 3: "Safe-to-Spend" Daily Pulse EngineGoal: Replace static category budgets with one live daily allowance number.Math Formula:$$\text{Remaining Monthly Pool} = \text{Monthly Income} - \text{Total Monthly Fixed Bills} - \text{Monthly Savings Goal} - \text{Variable Spend So Far This Month}$$$$\text{Daily Safe-to-Spend} = \frac{\text{Remaining Monthly Pool}}{\text{Days Remaining in Month (including today)}}$$UI Component: Display a large hero card at the top of Money Flow showing Daily Safe-to-Spend, Today's Spend, and a dynamic pacing indicator (Green if Today's Spend <= Daily Safe-to-Spend, Red if over).
+
+
+Task 4: Automated "Cut-Out" Advisor (Mid-Month & End-of-Month Audit)
+Goal: Identify overspending categories and convert them into next-month spending caps.
+
+Logic Requirements:
+
+Comparison Query: Group transactions by category for Current Month vs. Previous Month (excluding fixed bills).
+
+Trigger Condition: Trigger audit card on the 15th of the month (Mid-Month Pace Warning) and Last Day of the month (Monthly Wrap-Up).
+
+Top-3 Leaks Calculation: Sort categories by highest percentage/dollar increase over last month. Display top 3 with a button: "Cap at $[Suggested_Limit] Next Month".
+
+Challenge Tracker: Clicking the button inserts a record into cutout_challenges and renders a green/yellow/red progress bar on the dashboard for the following month.
+
+
+Task 5: Financial Evening Wrap-Up Ritual (6:00 PM Check-In)
+Goal: Provide a 10-second daily closing screen and gamify $0 spend days.
+
+Logic Requirements:
+
+Trigger: Show inside the 6:00 PM wrap-up modal (or via a "Wrap Up Day" button on the Money Flow tab).
+
+Summary View: Display Today's Total Spend and Updated Tomorrow's Safe-to-Spend.
+
+Zero-Spend Gamification: If Today's Total Spend == 0, highlight a "Claim No-Spend Day 🎉" button that increments financial_profile.no_spend_streak by +1 and displays a flame/streak badge.
+
+
+
+4. Recommended Build Order for Your Agent
+Prompt 1: "Set up the database tables (financial_profile, transactions, recurring_bills, cutout_challenges) and add the navigation toggle between Focus Flow and Money Flow."
+
+Prompt 2: "Build the Natural Language Expense Parser and hook it into the Cmd+K quick bar."
+
+Prompt 3: "Build the Safe-to-Spend Daily Pulse hero widget and the Recurring Bills auto-logger."
+
+Prompt 4: "Build the Top-3 Spending Leaks Cut-Out Advisor and the Evening Wrap-Up No-Spend Streak modal."

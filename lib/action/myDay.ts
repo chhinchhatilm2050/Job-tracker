@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { Types } from "mongoose";
 import { getSession } from "../auth/auth";
 import connectDB from "../db";
-import { Board, Column, DailyPlan, JobApplication } from "../models";
+import { Board, DailyPlan, JobApplication, Column } from "../models";
 import { buildDailySchedule } from "../dailyPlanning";
 import { parseBrainDump } from "../brainDumpParser";
 import { initializeUserBoard } from "../initUserBoard";

@@ -49,7 +49,23 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </Suspense>
             <main className="flex-1">{children}</main>
             <Footer />
-            <Toaster position="top-right" richColors closeButton theme="dark" />
+            <Toaster
+              position="top-center"
+              richColors
+              closeButton
+              theme="dark"
+              toastOptions={{
+                style: {
+                  width: "320px",
+                  maxWidth: "calc(100vw - 32px)",
+                  padding: "8px 10px",
+                },
+                classNames: {
+                  title: "text-sm",
+                  description: "text-xs",
+                },
+              }}
+            />
           </TooltipProvider>
         </ThemeProvider>
       </body>
