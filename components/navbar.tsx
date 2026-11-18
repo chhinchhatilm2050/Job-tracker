@@ -147,7 +147,7 @@ export default function Navbar() {
               <div className="flex h-9 w-9 items-center justify-center rounded-r-xl rounded-b-xl bg-primary text-primary-foreground shadow-sm">
                 <GraphStar className="size-5" />
               </div>
-              <span className="whitespace-nowrap">Life Flow</span>
+              <span className="whitespace-nowrap">LifE Fl◎W</span>
             </Link>
           </div>
            {/* Desktop Nav Links (Hidden on phone screen) */}
@@ -268,7 +268,7 @@ export default function Navbar() {
                 <div className="flex h-8 w-8 items-center rounded-r-xl rounded-b-xl justify-center  bg-primary text-primary-foreground">
                   <GraphStar className="size-4" />
                 </div>
-                <span>Life Flow</span>
+                <span>LifE Fl◎W</span>
               </Link>
               <Button
                 variant="ghost"

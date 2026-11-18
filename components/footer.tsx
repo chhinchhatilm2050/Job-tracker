@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Briefcase, CheckCircle2, GraphStar, Layers, TrendingUp } from "lucide-react";
+import { Briefcase, CheckCircle2, GraphStar, TrendingUp, Wallet } from "lucide-react";
 
 export default async function Footer() {
   "use cache";
@@ -18,11 +18,11 @@ export default async function Footer() {
               id="footer-features-title"
               className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
             >
-              Your boards, tasks, and habits in one place.
+              Your boards, tasks, habits, and spending in one place.
             </h2>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <article className="group flex flex-col justify-center items-center relative h-full overflow-hidden rounded-2xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-md dark:bg-zinc-900 dark:hover:border-zinc-600 sm:p-7">
               <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100">
                 <Briefcase className="size-5" aria-hidden="true" />
@@ -65,6 +65,20 @@ export default async function Footer() {
               </p>
               <div className="absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-500/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100 dark:via-zinc-400/40" />
             </article>
+
+            <article className="group flex flex-col justify-center items-center relative h-full overflow-hidden rounded-2xl border border-border/70 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-md dark:bg-zinc-900 dark:hover:border-zinc-600 sm:p-7">
+              <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100">
+                <Wallet className="size-5" aria-hidden="true" />
+              </div>
+              <h3 className="mb-2 text-lg font-semibold tracking-tight text-foreground">
+                Know what you can spend
+              </h3>
+              <p className="text-sm text-center leading-6 text-muted-foreground">
+                Log expenses in one line, let recurring bills log themselves,
+                and check your daily Safe-to-Spend in Money Flow.
+              </p>
+              <div className="absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-500/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100 dark:via-zinc-400/40" />
+            </article>
           </div>
         </section>
 
@@ -76,7 +90,7 @@ export default async function Footer() {
             <span className="flex size-9 items-center justify-center rounded-b-xl rounded-r-xl bg-primary text-primary-foreground shadow-sm">
               <GraphStar className="size-4" aria-hidden="true" />
             </span>
-            <span className="font-semibold tracking-tight">Life Flow</span>
+            <span className="font-semibold tracking-tight">LifE Fl◎W</span>
           </Link>
 
           <nav
@@ -87,10 +101,22 @@ export default async function Footer() {
               Home
             </Link>
             <Link
+              href="/my-day"
+              className="transition-colors hover:text-foreground"
+            >
+              My Day
+            </Link>
+            <Link
               href="/dashboard"
               className="transition-colors hover:text-foreground"
             >
-              Dashboard
+              Boards
+            </Link>
+            <Link
+              href="/money"
+              className="transition-colors hover:text-foreground"
+            >
+              Money Flow
             </Link>
             <Link
               href="/about"

@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Task Flow",
   description:
-    "Organize tasks, habits, projects, and job searches. Capture work quickly, plan your day, and focus on what matters next.",
+    "Organize tasks, habits, projects, job searches, and daily spending. Capture work and expenses quickly, plan your day, and focus on what matters next.",
   icons: {
     icon: "/icon.svg",
   },

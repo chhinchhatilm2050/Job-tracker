@@ -5,8 +5,10 @@ import {
   CheckCircle2,
   Clock3,
   Command,
+  Flame,
   Layers,
   Sun,
+  Wallet,
 } from "lucide-react";
 
 const features = [
@@ -26,13 +28,25 @@ const features = [
     icon: Command,
     title: "Quick capture and smart planning",
     description:
-      "Capture a thought with Ctrl+K or Cmd+K, then plan your day around available hours, energy, and priorities.",
+      "Capture a task or an expense with Ctrl+K or Cmd+K, then plan your day around available hours, energy, and priorities.",
   },
   {
     icon: Clock3,
     title: "Focus and daily review",
     description:
       "Use Pomodoro focus sessions to track time, then review what you finished and reschedule unfinished work.",
+  },
+  {
+    icon: Wallet,
+    title: "A daily spending number",
+    description:
+      "Money Flow turns your income, fixed bills, and savings goal into one Safe-to-Spend amount for today. Recurring bills log themselves when they come due.",
+  },
+  {
+    icon: Flame,
+    title: "Spending alerts and streaks",
+    description:
+      "Get a warning 3 days before a bill renews, see which categories grew most since last month, cap them for next month, and build a no-spend streak.",
   },
 ];
 
@@ -46,11 +60,11 @@ export default function AboutPage() {
               Make space for what matters
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-zinc-400">
-              Task Flow brings your tasks, habits, projects, and job search into one workspace. Capture work quickly, plan a realistic day, and focus on one next step at a time.
+              Life Flow brings your tasks, habits, projects, job search, and daily spending into one workspace. Capture work and expenses quickly, plan a realistic day, and focus on one next step at a time.
             </p>
           </div>
 
-          <div className="mt-16 grid gap-6 sm:grid-cols-2">
+          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => {
               const Icon = feature.icon;
               return (
@@ -82,7 +96,7 @@ export default function AboutPage() {
                 id="how-to-use-heading"
                 className="mt-4 text-2xl font-bold text-gray-900 dark:text-zinc-100 md:text-3xl"
               >
-                How to use Task Flow
+                How to use Life Flow
               </h2>
               <p className="mt-3 text-sm leading-6 text-gray-600 dark:text-zinc-400">
                 You can start with one board and add more workflows whenever
@@ -127,13 +141,34 @@ export default function AboutPage() {
                   you go, then use the daily wrap-up to review or reschedule.
                 </p>
               </li>
+              <li className="rounded-xl bg-white p-5 dark:bg-zinc-950">
+                <h3 className="font-semibold text-gray-900 dark:text-zinc-100">
+                  5. Set up Money Flow
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-zinc-400">
+                  Sign in, open Money Flow, and select Set budget to enter
+                  your monthly income, savings goal, and currency. Your daily
+                  Safe-to-Spend appears right away.
+                </p>
+              </li>
+              <li className="rounded-xl bg-white p-5 dark:bg-zinc-950">
+                <h3 className="font-semibold text-gray-900 dark:text-zinc-100">
+                  6. Log spending and wrap up
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-zinc-400">
+                  Type &ldquo;lunch 12&rdquo; or &ldquo;netflix $15
+                  monthly&rdquo; on Money Flow, or start with $ or
+                  &ldquo;spent&rdquo; in Ctrl/Cmd+K. At 6:00 PM, or with Wrap
+                  Up Day, review today and claim a no-spend day.
+                </p>
+              </li>
             </ol>
           </section>
 
           <div className="mt-12 rounded-2xl border border-zinc-800 bg-black/80 p-8 text-center text-white dark:bg-zinc-900 md:p-12">
             <h2 className="text-2xl md:text-3xl font-bold">Ready to move your plans forward?</h2>
             <p className="mt-3 text-slate-300 max-w-xl mx-auto text-sm md:text-base">
-              Create a board, capture your work, and let My Day guide your next step.
+              Create a board, capture your work, and let My Day and Money Flow guide your next step.
             </p>
             <div className="mt-6 flex justify-center gap-4">
               <Link
