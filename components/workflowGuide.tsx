@@ -209,7 +209,7 @@ export default function WorkflowGuide() {
             id="workflow-guide-title"
             className="mt-4 text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl"
           >
-            Type it once. Task Flow sorts it out.
+            Type it once. Life Flow sorts it out.
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-zinc-600 dark:text-zinc-400 sm:text-lg">
             Plan your work in My Day and keep your spending on track in Money

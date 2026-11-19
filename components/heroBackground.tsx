@@ -40,7 +40,7 @@ export function HeroBackground() {
 
       {/* Interactive Mouse & Scroll Spotlight Glow */}
       <motion.div
-        className="absolute h-[500px] w-[500px] rounded-full bg-gradient-to-r from-indigo-500/20 via-red-500/15 to-emerald-500/10 blur-[100px]"
+        className="absolute h-[500px] w-[500px] rounded-full bg-gradient-to-r from-red-600/10 via-red-500/15 to-white/30 blur-[50px]"
         animate={{
           x: mousePosition.x - 250,
           y: mousePosition.y - 250 + scrollY * 0.4,
@@ -64,7 +64,7 @@ export function HeroBackground() {
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute -top-20 left-1/4 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-red-700/15 blur-3xl"
+        className="absolute -top-20 left-1/4 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-red-700/10 blur-3xl"
       />
 
       <motion.div
@@ -78,7 +78,7 @@ export function HeroBackground() {
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute top-10 right-1/4 h-[28rem] w-[28rem] translate-x-1/2 rounded-full bg-red-600/10 blur-3xl"
+        className="absolute top-10 right-1/4 h-[28rem] w-[28rem] translate-x-1/2 rounded-full bg-red-800/10 blur-3xl"
       />
 
       {/* Falling Grid Beams */}
@@ -94,7 +94,7 @@ export function HeroBackground() {
             ease: "linear",
           }}
           style={{ left: `${leftPercent}%` }}
-          className="absolute top-0 h-24 w-[1px] bg-gradient-to-b from-transparent via-white to-transparent"
+          className="absolute top-0 h-24 w-[1px] bg-gradient-to-b from-transparent via-red-500 to-transparent dark:via-white"
         />
       ))}
     </div>

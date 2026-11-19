@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Life Flow icon">
+  <defs>
+    <linearGradient id="bg" x1="8" y1="4" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#18181b"/>
+      <stop offset="1" stop-color="#09090b"/>
+    </linearGradient>
+    <linearGradient id="flow" x1="17" y1="47" x2="48" y2="15" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f87171"/>
+      <stop offset="0.55" stop-color="#fb923c"/>
+      <stop offset="1" stop-color="#fde68a"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+  <path d="M15 43c8 0 8-18 16-18 7 0 7 14 17 14" fill="none" stroke="#27272a" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M15 43c8 0 8-18 16-18 7 0 7 14 17 14" fill="none" stroke="url(#flow)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="48" cy="39" r="8" fill="#18181b" stroke="#fafafa" stroke-width="2.5"/>
+  <path d="M44.5 39.2l2.2 2.2 5-5.5" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="21" cy="17" r="4" fill="#fef3c7"/>
+  <path d="M21 9v-3M13 17H10M15.5 11.5l-2.2-2.2M26.5 11.5l2.2-2.2" fill="none" stroke="#fdba74" stroke-width="2" stroke-linecap="round"/>
+</svg>

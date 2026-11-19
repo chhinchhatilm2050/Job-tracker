@@ -54,7 +54,7 @@ export default function AboutPage() {
   return (
     <div className="flex min-h-screen flex-col bg-white dark:bg-zinc-950 transition-colors">
       <main className="flex-1">
-        <section className="mx-auto max-w-7xl px-6 py-16 md:py-24">
+        <section className="mx-auto max-w-7xl px-6 py-16 md:py-20">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-zinc-100 sm:text-5xl">
               Make space for what matters

@@ -95,7 +95,7 @@ export default function MoneyWrapUpDialog({
             >
               {profile.claimedNoSpendToday
                 ? "No-spend day claimed"
-                : "Claim No-Spend Day 🎉"}
+                : `Claim No-Spend Day`}
             </Button>
           )}
         </DialogFooter>
